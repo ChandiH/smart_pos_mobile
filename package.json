@@ -9,10 +9,19 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-community/masked-view": "^0.1.11",
+    "@react-navigation/bottom-tabs": "^5.11.15",
+    "@react-navigation/native": "^5.9.8",
+    "@react-navigation/stack": "^5.14.9",
     "expo": "~49.0.8",
+    "expo-image-picker": "~14.1.1",
+    "expo-linear-gradient": "^12.3.0",
+    "expo-permissions": "~14.1.1",
     "expo-status-bar": "~1.6.0",
+    "formik": "^2.2.9",
     "react": "18.2.0",
-    "react-native": "0.72.4"
+    "react-native": "0.72.4",
+    "yup": "^1.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
