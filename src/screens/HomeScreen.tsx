@@ -8,8 +8,9 @@ function HomeScreen({ navigation }: any) {
     <Screen style={{}}>
       <Text>Common</Text>
       <Button title="Login" onPress={() => navigation.navigate(routes.LOGIN)} />
-      <Text>Customer</Text>
 
+      {/* CUSTOMER */}
+      <Text>Customer</Text>
       <Button
         title="Add Customer"
         onPress={() => navigation.navigate(routes.ADD_CUSTOMER)}
@@ -18,8 +19,9 @@ function HomeScreen({ navigation }: any) {
         title="Customer List"
         onPress={() => navigation.navigate(routes.CUSTOMER_LIST)}
       />
-      <Text>Inventory</Text>
 
+      {/* INVENTORY */}
+      <Text>Inventory</Text>
       <Button
         title="Add Product"
         onPress={() => navigation.navigate(routes.ADD_PRODUCT)}
@@ -30,7 +32,50 @@ function HomeScreen({ navigation }: any) {
       />
       <Button
         title="Product Detail"
-        onPress={() => navigation.navigate(routes.PRODUCT_DETAIL)}
+        onPress={() =>
+          navigation.navigate(routes.PRODUCT_DETAIL, {
+            product: {
+              product_id: 1,
+              name: "Muffin Chocolate Individual Wrap",
+              description: "Pork - Tenderloin, Frozen",
+              category: "Comedy|Drama|Romance",
+              image: [
+                "https://placehold.co/600x400/png",
+                "https://placehold.co/200x200/png",
+                "https://placehold.co/200x200/png",
+              ],
+              weight: 100,
+              unit: 1,
+              buyingPrice: "Rs. 48.67",
+              retailPrice: "Rs. 8.85",
+              discount: 1,
+              barcode: "55154-5980",
+              supplier_id: 98,
+            },
+          })
+        }
+      />
+
+      {/* EMPLOYEE */}
+      <Text>Employee</Text>
+      <Button
+        title="Employee List"
+        onPress={() => navigation.navigate(routes.EMPLOYEE_LIST)}
+      />
+      <Button
+        title="Employee Detail"
+        onPress={() => navigation.navigate(routes.EMPLOYEE_DETAIL)}
+      />
+
+      {/* ORDER */}
+      <Text>Order</Text>
+      <Button
+        title="Cashier Sale"
+        onPress={() => navigation.navigate(routes.CASHIER)}
+      />
+      <Button
+        title="Sale History"
+        onPress={() => navigation.navigate(routes.SALE_HISTORY)}
       />
     </Screen>
   );

@@ -5,4 +5,8 @@ export default Object.freeze({
   ADD_PRODUCT: "AddProduct",
   PRODUCT_LIST: "ProductList",
   PRODUCT_DETAIL: "ProductDetail",
+  EMPLOYEE_LIST: "EmployeeList",
+  EMPLOYEE_DETAIL: "EmployeeDetail",
+  CASHIER: "Cashier",
+  SALE_HISTORY: "SaleHistory",
 });

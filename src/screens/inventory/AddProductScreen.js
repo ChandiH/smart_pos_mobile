@@ -11,6 +11,7 @@ import {
 } from "../../components/forms";
 import Screen from "../../components/Screen";
 
+import { saveProduct } from "../../services/fakeProductService";
 import customStyles from "../../config/customStyles";
 
 const categories = [
@@ -52,8 +53,28 @@ const validationSchema = Yup.object().shape({
 });
 
 function AddProduct(props) {
+  mapToModel = (values) => {
+    const product = {
+      name: values.title,
+      retailPrice: values.retailPrice,
+      buyingPrice: values.buyingPrice,
+      category: values.category.label,
+      image: values.images,
+      weight: values.weight,
+      unit: values.units,
+      barcode: values.barcode,
+      supplier_id: values.supplier.value,
+      description: values.description,
+    };
+    return product;
+  };
+
   const onSubmit = (values) => {
-    console.log(values);
+    console.log("values", values);
+    const product = mapToModel(values);
+    console.log("product", product);
+    saveProduct(product);
+    console.log("got", product);
   };
   return (
     <Screen style={styles.container}>
