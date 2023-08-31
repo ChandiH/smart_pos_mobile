@@ -16,8 +16,8 @@ const AppButton = ({ title, onPress }: propTypes) => {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: colors.button,
-    borderRadius: 25,
+    backgroundColor: colors.linearbtn1,
+    borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
     padding: 15,

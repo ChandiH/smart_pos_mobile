@@ -10,10 +10,7 @@ function SubmitButton({ title, width }) {
 
   return (
     <TouchableOpacity onPress={handleSubmit} style={{ width }}>
-      <LinearGradient
-        style={styles.button}
-        colors={["#628EFF", "#8740CD", "#580475"]}
-      >
+      <LinearGradient style={styles.button} colors={colors.linearBtn}>
         <Text style={styles.text}>{title}</Text>
       </LinearGradient>
     </TouchableOpacity>
