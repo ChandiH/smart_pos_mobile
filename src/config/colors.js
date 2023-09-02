@@ -10,4 +10,5 @@ export default {
   linearbtn2: "#8740CD",
   linearbtn3: "#580475",
   linearBtn: ["#628EFF", "#8740CD", "#580475"],
+  blue: "#0D62CA",
 };

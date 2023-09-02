@@ -1,186 +1,225 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Text,
   View,
   StyleSheet,
-  Button,
-  Modal,
-  Pressable,
-  ScrollView,
-  Image,
+  FlatList,
+  TextInput,
+  TouchableOpacity,
 } from "react-native";
-import { BarCodeScanner } from "expo-barcode-scanner";
 import AppButton from "../../components/AppButton";
-import AppTextInput from "../../components/AppTextInput";
-import { SearchBarAndroid } from "./../../../node_modules/@rneui/base/dist/SearchBar/SearchBar-android";
-import { Card, Icon } from "@rneui/themed";
-const users = [
-  {
-    name: "brynn",
-    avatar: "https://uifaces.co/our-content/donated/1H_7AxP0.jpg",
-  },
-  {
-    name: "thot leader",
-    avatar:
-      "https://images.pexels.com/photos/598745/pexels-photo-598745.jpeg?crop=faces&fit=crop&h=200&w=200&auto=compress&cs=tinysrgb",
-  },
-  {
-    name: "jsa",
-    avatar: "https://uifaces.co/our-content/donated/bUkmHPKs.jpg",
-  },
-  {
-    name: "talhaconcepts",
-    avatar: "https://randomuser.me/api/portraits/men/4.jpg",
-  },
-  {
-    name: "andy vitale",
-    avatar: "https://uifaces.co/our-content/donated/NY9hnAbp.jpg",
-  },
-  {
-    name: "katy friedson",
-    avatar:
-      "https://images-na.ssl-images-amazon.com/images/M/MV5BMTgxMTc1MTYzM15BMl5BanBnXkFtZTgwNzI5NjMwOTE@._V1_UY256_CR16,0,172,256_AL_.jpg",
-  },
-];
+import PopUpModal from "../../components/PopUpModal";
+import BarCodeReader from "../../components/BarCodeReader";
+import { ListItem, Avatar, Button } from "@rneui/themed";
+import { SearchBarAndroid } from "@rneui/base/dist/SearchBar/SearchBar-android";
 
-function CashierScreen() {
-  const [modalVisible, setModalVisible] = React.useState(false);
+import { getProducts } from "../../services/fakeProductService";
 
-  const [hasPermission, setHasPermission] = useState(null);
+import CartContext from "../../context/CartContext";
+import routes from "../../navigation/routes";
+import colors from "../../config/colors";
+
+function CashierScreen({ navigation }) {
+  const { cart, setCart } = useContext(CartContext);
+
+  const [barcodeModalVisible, setBarcodeModalVisible] = useState(false);
+  const [quantityModalVisible, setQuantityModalVisible] = useState(false);
+
   const [scanned, setScanned] = useState(false);
+  const [barcode, setBarcode] = useState("");
 
-  const [searchQuery, setSearchQuery] = React.useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const [products, setProducts] = useState([]);
+  const [fliteredProducts, setFilteredProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState({});
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    const getBarCodeScannerPermissions = async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === "granted");
-    };
-
-    getBarCodeScannerPermissions();
+    async function fetchData() {
+      const allProduct = await getProducts();
+      setProducts(allProduct);
+      setFilteredProducts(allProduct);
+    }
+    fetchData();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }) => {
-    setScanned(true);
-    setSearchQuery(data);
-    setModalVisible(!modalVisible);
-    console.log(
-      `Bar code with type ${type} and data ${data} has been scanned!`
+  useEffect(() => {
+    if (scanned) {
+      setSearchQuery(barcode);
+      filterProduct(barcode);
+      setScanned(false);
+      setBarcodeModalVisible(false);
+    }
+  }, [scanned]);
+
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+    filterProduct(text);
+  };
+
+  const filterProduct = (query) => {
+    let filteredProducts = [...products];
+    if (query !== "") {
+      filteredProducts = products.filter(
+        (item) =>
+          item.name.toLowerCase().startsWith(query.toLowerCase()) ||
+          item.barcode.toLowerCase().startsWith(query.toLowerCase())
+      );
+    }
+    setFilteredProducts(filteredProducts);
+    console.log(filteredProducts);
+  };
+
+  const addToCart = (product) => {
+    const productInCart = cart.find(
+      (item) => item.product_id === product.product_id
+    );
+    const newCart = [...cart];
+    if (productInCart) {
+      const index = newCart.indexOf(productInCart);
+      newCart[index].quantity += product.quantity;
+      setCart(newCart);
+      return;
+    }
+    newCart.push({ ...product });
+    setCart(newCart);
+    setQuantity(1);
+    setSelectedProduct({});
+  };
+
+  const popUpBarcodeSanner = () => (
+    <PopUpModal
+      modalVisible={barcodeModalVisible}
+      setModalVisible={setBarcodeModalVisible}
+    >
+      <BarCodeReader
+        scanned={scanned}
+        setScanned={setScanned}
+        setBarcode={setBarcode}
+      />
+      <Button
+        containerStyle={styles.button}
+        buttonStyle={{ height: 50, backgroundColor: "red" }}
+        onPress={() => setBarcodeModalVisible(!barcodeModalVisible)}
+        title="Cancel"
+      />
+    </PopUpModal>
+  );
+
+  const popUpSetQuantity = () => {
+    return (
+      <PopUpModal
+        modalVisible={quantityModalVisible}
+        setModalVisible={setQuantityModalVisible}
+      >
+        <Text style={styles.modalText}>{selectedProduct.name}</Text>
+        <View style={styles.quantityView}>
+          <Text style={{ fontSize: 20 }}>Quantity</Text>
+          <View style={{ flexDirection: "row" }}>
+            <Button
+              title="-"
+              onPress={() =>
+                quantity > 1
+                  ? setQuantity(parseInt(quantity) - 1)
+                  : setQuantity(1)
+              }
+              containerStyle={styles.quantityBtn}
+            />
+            <TextInput
+              style={{ height: 40, fontSize: 20, marginHorizontal: 10 }}
+              value={quantity.toString()}
+              onChangeText={(text) => setQuantity(text)}
+              keyboardType="numeric"
+            />
+            <Button
+              title="+"
+              onPress={() => setQuantity(parseInt(quantity) + 1)}
+              containerStyle={styles.quantityBtn}
+            />
+          </View>
+        </View>
+        <Button
+          containerStyle={styles.button}
+          buttonStyle={{ height: 50 }}
+          onPress={() => {
+            setQuantityModalVisible(!quantityModalVisible);
+            addToCart({ ...selectedProduct, quantity: parseInt(quantity) });
+            setQuantity(1);
+          }}
+          title="Add to Cart"
+        />
+        <Button
+          containerStyle={styles.button}
+          buttonStyle={{ height: 50, backgroundColor: "red" }}
+          onPress={() => {
+            setQuantityModalVisible(!quantityModalVisible);
+            setQuantity(1);
+          }}
+          title="Cancel"
+        />
+      </PopUpModal>
     );
   };
 
-  if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
-
-  const popUpScanner = () => (
-    <View style={styles.centeredView}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
+  const rederListItem = ({ item }) => (
+    <>
+      <TouchableOpacity
+        onPress={() => {
+          setSelectedProduct({ ...item, quantity: 1 });
+          setQuantityModalVisible(true);
         }}
       >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <View
-              style={{
-                borderColor: "red",
-                borderWidth: 3,
-                alignSelf: "center",
-                width: 200,
-                aspectRatio: 3 / 4,
-              }}
-            >
-              <BarCodeScanner
-                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                style={StyleSheet.absoluteFillObject}
-              />
-              {/* {scanned && (
-                <Button
-                  title={"Tap to Scan Again"}
-                  onPress={() => setScanned(false)}
-                />
-              )} */}
-            </View>
-
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Update</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
-    </View>
-  );
-
-  const popUpSetQuantity = () => (
-    <View style={styles.centeredView}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Set Quantity</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Update</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
-    </View>
+        <ListItem bottomDivider>
+          <Avatar
+            source={{
+              uri: item.image[0],
+            }}
+          />
+          <ListItem.Content>
+            <ListItem.Title>
+              <Text>{item.name}</Text>
+            </ListItem.Title>
+            <ListItem.Subtitle>
+              <Text>{item.category}</Text>
+            </ListItem.Subtitle>
+            <ListItem.Subtitle>
+              <Text>{item.retailPrice}</Text>
+            </ListItem.Subtitle>
+          </ListItem.Content>
+        </ListItem>
+      </TouchableOpacity>
+      <View style={{ width: "100%", height: 3 }} />
+    </>
   );
 
   return (
     <View style={styles.container}>
-      {popUpScanner()}
-
       <SearchBarAndroid
         placeholder="Add Product"
-        onChangeText={(text) => setSearchQuery(text)}
+        onChangeText={handleSearch}
         value={searchQuery}
       />
-      <Card>
-        <Card.Title>CART</Card.Title>
-        <Card.Divider />
-        {users.map((u, i) => {
-          return (
-            <View key={i} style={styles.user}>
-              <Image
-                style={styles.image}
-                resizeMode="cover"
-                source={{ uri: u.avatar }}
-              />
-              <Text style={styles.name}>{u.name}</Text>
-            </View>
-          );
-        })}
-      </Card>
-      <AppButton
-        title="Barcode Scanner"
-        onPress={() => {
-          setModalVisible(true);
-          setScanned(false);
-        }}
+      <FlatList
+        style={{ marginBottom: 120 }}
+        data={fliteredProducts}
+        renderItem={rederListItem}
+        keyExtractor={(item) => item.barcode}
       />
-      <AppButton title="Proceed" onPress={() => console.log("proceed")} />
+
+      {/* Button */}
+      <View style={styles.bottomBtn}>
+        <AppButton
+          title="Barcode Scanner"
+          onPress={() => {
+            setBarcodeModalVisible(true);
+            setScanned(false);
+          }}
+        />
+        <AppButton title="Cart" onPress={() => navigation.push(routes.CART)} />
+        {popUpSetQuantity()}
+        {popUpBarcodeSanner()}
+      </View>
     </View>
   );
 }
@@ -188,42 +227,11 @@ function CashierScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // flexDirection: "column",
-    // justifyContent: "center",
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    // alignSelf: "center",
-    // alignItems: "center",
-    // marginTop: 22,
-    borderColor: "black",
-    borderWidth: 1,
-  },
-  modalView: {
-    borderColor: "black",
-    borderWidth: 2,
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 25,
-    // alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
   },
   button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
+    margin: 5,
+    borderRadius: 15,
+    overflow: "hidden",
   },
   textStyle: {
     color: "white",
@@ -234,6 +242,24 @@ const styles = StyleSheet.create({
     fontSize: 25,
     marginBottom: 15,
     textAlign: "center",
+  },
+  quantityView: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexDirection: "row",
+    paddingHorizontal: 30,
+    marginBottom: 20,
+  },
+  quantityBtn: {
+    width: 40,
+    aspectRatio: 1,
+  },
+  bottomBtn: {
+    position: "absolute",
+    width: "95%",
+    bottom: 0,
+    alignSelf: "center",
   },
 });
 

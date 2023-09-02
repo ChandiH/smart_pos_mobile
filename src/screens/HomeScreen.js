@@ -1,14 +1,25 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { Text, Button } from "react-native";
 import Screen from "../components/Screen";
+
+import UserContext from "../context/UserContext";
 import routes from "../navigation/routes";
 
-function HomeScreen({ navigation }: any) {
+function HomeScreen({ navigation }) {
+  const { user, setUser } = useContext(UserContext);
+
+  useEffect(() => {
+    if (!user) navigation.replace(routes.LOGIN);
+  }, [user]);
+
   return (
     <Screen style={{}}>
       <Text>Common</Text>
       <Button title="Login" onPress={() => navigation.navigate(routes.LOGIN)} />
-
+      <Button
+        title="Profile"
+        onPress={() => navigation.navigate(routes.PROFILE)}
+      />
       {/* CUSTOMER */}
       <Text>Customer</Text>
       <Button
@@ -19,7 +30,6 @@ function HomeScreen({ navigation }: any) {
         title="Customer List"
         onPress={() => navigation.navigate(routes.CUSTOMER_LIST)}
       />
-
       {/* INVENTORY */}
       <Text>Inventory</Text>
       <Button
@@ -55,7 +65,6 @@ function HomeScreen({ navigation }: any) {
           })
         }
       />
-
       {/* EMPLOYEE */}
       <Text>Employee</Text>
       <Button
@@ -66,13 +75,13 @@ function HomeScreen({ navigation }: any) {
         title="Employee Detail"
         onPress={() => navigation.navigate(routes.EMPLOYEE_DETAIL)}
       />
-
       {/* ORDER */}
       <Text>Order</Text>
       <Button
         title="Cashier Sale"
         onPress={() => navigation.navigate(routes.CASHIER)}
       />
+      <Button title="Cart" onPress={() => navigation.navigate(routes.CART)} />
       <Button
         title="Sale History"
         onPress={() => navigation.navigate(routes.SALE_HISTORY)}
