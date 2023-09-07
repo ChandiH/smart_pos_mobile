@@ -22,6 +22,7 @@ function FormInputField({ name, label, width, icon = "", ...otherProps }) {
           placeholderTextColor={colors.white}
           onBlur={() => setFieldTouched(name)}
           onChangeText={handleChange(name)}
+          onChange={handleChange(name)}
           {...otherProps}
         />
       </View>

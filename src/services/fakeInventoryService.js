@@ -344,7 +344,7 @@ export function getInventoryByBranch(branchId) {
 // will return the product with its stock quantity
 export function getInventoryByProduct(productId) {
   const allInventory = getInventory();
-  return allInventory.find((i) => i.product_id.toString() === productId);
+  return allInventory.find((i) => i.product_id.toString() == productId);
 }
 
 // will return each product with its stock quantity in a given branch

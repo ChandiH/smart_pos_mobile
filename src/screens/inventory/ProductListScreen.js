@@ -89,7 +89,7 @@ function ProductListScreen({ navigation }) {
             <View style={{ width: "100%", height: 3 }} />
           </>
         )}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.product_id}
       />
     </View>
   );

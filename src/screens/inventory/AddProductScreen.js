@@ -1,5 +1,11 @@
-import React from "react";
-import { StyleSheet, Text, ScrollView, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  ScrollView,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import * as Yup from "yup";
 
 import {
@@ -13,6 +19,10 @@ import Screen from "../../components/Screen";
 
 import { saveProduct } from "../../services/fakeProductService";
 import customStyles from "../../config/customStyles";
+import { Icon, Button } from "@rneui/themed";
+import PopUpModal from "../../components/PopUpModal";
+import BarCodeReader from "../../components/sale/BarCodeReader";
+// import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
 
 const categories = [
   { label: "Furniture", value: 1 },
@@ -47,12 +57,24 @@ const validationSchema = Yup.object().shape({
   images: Yup.array().min(1, "Please select at least one image."),
   weight: Yup.number().required().min(1).max(10000).label("Weight"),
   units: Yup.number().required().min(1).max(10000).label("Units"),
-  barcode: Yup.string().required().min(1).max(10000).label("Barcode"),
+  barcode: Yup.string().min(1).max(10000).label("Barcode"),
   supplier: Yup.object().required().nullable().label("Supplier"),
   description: Yup.string().label("Description"),
 });
 
 function AddProduct(props) {
+  const [values, setValues] = React.useState(initialValues);
+  const [barcodeModalVisible, setBarcodeModalVisible] = React.useState(false);
+  const [scanned, setScanned] = React.useState(false);
+  const [barcode, setBarcode] = React.useState("");
+
+  useEffect(() => {
+    if (scanned) {
+      setValues({ ...values, barcode: barcode });
+      setBarcodeModalVisible(false);
+    }
+  }, [scanned]);
+
   mapToModel = (values) => {
     const product = {
       name: values.title,
@@ -70,18 +92,39 @@ function AddProduct(props) {
   };
 
   const onSubmit = (values) => {
+    if (scanned) values.barcode = barcode;
     console.log("values", values);
     const product = mapToModel(values);
     console.log("product", product);
     saveProduct(product);
     console.log("got", product);
   };
+
+  const popUpBarcodeSanner = () => (
+    <PopUpModal
+      modalVisible={barcodeModalVisible}
+      setModalVisible={setBarcodeModalVisible}
+    >
+      <BarCodeReader
+        scanned={scanned}
+        setScanned={setScanned}
+        setBarcode={setBarcode}
+      />
+      <Button
+        containerStyle={styles.button}
+        buttonStyle={{ height: 50, backgroundColor: "red" }}
+        onPress={() => setBarcodeModalVisible(!barcodeModalVisible)}
+        title="Cancel"
+      />
+    </PopUpModal>
+  );
+
   return (
     <Screen style={styles.container}>
       <ScrollView style={{ width: "100%" }}>
         <Text style={customStyles.header2}>Product Details</Text>
         <Form
-          initialValues={initialValues}
+          initialValues={values}
           onSubmit={onSubmit}
           validationSchema={validationSchema}
         >
@@ -135,13 +178,36 @@ function AddProduct(props) {
             label="Units"
             placeholder="number of products per item"
           />
-          <FormInputField
-            maxLength={255}
-            name="barcode"
-            label="Barcode"
-            placeholder="type barcode"
-          />
-
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <View style={{ width: "80%" }}>
+              <FormInputField
+                maxLength={255}
+                name="barcode"
+                value={values.barcode}
+                label="Barcode"
+                placeholder="type or scan barcode"
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                setScanned(false);
+                setBarcodeModalVisible(true);
+              }}
+              style={styles.barcodeBtn}
+            >
+              <Icon
+                color="blue"
+                name="barcode-scan"
+                type="material-community"
+                size={30}
+              />
+            </TouchableOpacity>
+          </View>
           <FormPicker
             label="choose supplier"
             items={suppliers}
@@ -160,6 +226,7 @@ function AddProduct(props) {
           <SubmitButton title="Save" width="100%" />
         </Form>
       </ScrollView>
+      {popUpBarcodeSanner()}
     </Screen>
   );
 }
@@ -170,6 +237,21 @@ const styles = StyleSheet.create({
     padding: 10,
     flex: 1,
     alignItems: "center",
+  },
+  button: {
+    margin: 5,
+    borderRadius: 15,
+    overflow: "hidden",
+  },
+  barcodeBtn: {
+    backgroundColor: customStyles.colors.linearbtn1,
+    justifyContent: "center",
+    margin: 10,
+    width: "15%",
+    aspectRatio: 1,
+    alignItems: "center",
+    borderRadius: 10,
+    alignSelf: "flex-end",
   },
 });
 

@@ -1,15 +1,13 @@
-import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  Modal,
-  Pressable,
-} from "react-native";
+import React, { useState, useEffect, useContext } from "react";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
 import ImageItem from "../../components/ImageItem";
 import AppButton from "../../components/AppButton";
-import AppTextInput from "../../components/AppTextInput";
+import PopUpModal from "../../components/PopUpModal";
+import StockUpdateWindow from "../../components/inventory/StockUpdataWindow";
+import UserContext from "../../context/UserContext";
+
+import { getInventoryByProduct } from "../../services/fakeInventoryService";
+import { getBranches } from "../../services/fakeBranchService";
 
 // const product = {
 //   product_id: 1,
@@ -31,15 +29,51 @@ import AppTextInput from "../../components/AppTextInput";
 // };
 
 function productDetailScreen({ route }) {
-  const { product } = route.params;
+  const { user } = useContext(UserContext);
+  const [product, setProduct] = useState(route.params.product);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [branches, setBranches] = useState([]);
 
-  const [modalVisible, setModalVisible] = React.useState(false);
-  const [quantity, setQuantity] = React.useState(0);
+  const fetchStock = async () => {
+    const product_id = route.params.product.product_id;
+    const detailedProduct = await getInventoryByProduct(product_id);
+    const branch = await getBranches();
+    const currentBranch = branch.find((b) => b.branch_id === user.branch_id);
+    setBranches(branch);
 
-  React.useEffect(() => {
-    console.log(quantity);
-  }, [quantity]);
+    if (detailedProduct) {
+      const branchStock = detailedProduct.stock.find(
+        (b) => b.branch_id === user.branch_id
+      );
+      setProduct({
+        ...detailedProduct,
+        branchName: currentBranch.name,
+        branchStock: branchStock,
+      });
+    } else {
+      setProduct({
+        ...product,
+        branchName: currentBranch.name,
+        branchStock: { updatedAt: "never", quantity: 0 },
+      });
+    }
+  };
 
+  useEffect(() => {
+    fetchStock();
+  }, []);
+
+  const onStockUpdate = (quantity) => {
+    setModalVisible(false);
+    const newProduct = { ...product };
+    newProduct.branchStock.quantity += quantity;
+    newProduct.branchStock.updatedAt = new Date().toDateString();
+    setProduct(newProduct);
+  };
+
+  const onCancel = () => {
+    setModalVisible(false);
+  };
   const renderDetail = (label, value) => (
     <View
       style={{
@@ -54,49 +88,26 @@ function productDetailScreen({ route }) {
     </View>
   );
 
-  const popUpModal = () => (
-    <View style={styles.centeredView}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Current Stock</Text>
-            {renderDetail("Branch Name", "quantity")}
-            <Text style={styles.modalText}>Update Stock</Text>
-            <AppTextInput
-              placeholder="Quantity"
-              keyboardType="numeric"
-              onChangeText={(text) => setQuantity(text)}
-              value={quantity}
-            />
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Update</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
-    </View>
+  const stockUpdateModal = () => (
+    <PopUpModal modalVisible={modalVisible} setModalVisible={setModalVisible}>
+      <StockUpdateWindow
+        product={product}
+        onUpdate={onStockUpdate}
+        onCancel={onCancel}
+      />
+    </PopUpModal>
   );
 
   return (
     <View style={styles.container}>
-      {popUpModal()}
       <ScrollView>
-        <ImageItem
-          imageUri={product.image[0]}
-          imageStyle={styles.leftImage}
-          viewStyle={{ aspectRatio: 2, width: "100%", marginBottom: 10 }}
-        />
+        {product?.image && (
+          <ImageItem
+            imageUri={product.image[0]}
+            imageStyle={styles.leftImage}
+            viewStyle={{ aspectRatio: 2, width: "100%", marginBottom: 10 }}
+          />
+        )}
         <View style={{ flexDirection: "row", marginBottom: 10 }}>
           {product.image.slice(1).map((imgUri) => (
             <ImageItem
@@ -122,6 +133,7 @@ function productDetailScreen({ route }) {
         <AppButton title="Edit" onPress={() => console.log("Edit")} />
         <AppButton title="UpdateStock" onPress={() => setModalVisible(true)} />
       </ScrollView>
+      {stockUpdateModal()}
     </View>
   );
 }

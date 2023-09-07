@@ -33,6 +33,7 @@ function BarCodeReader({ setBarcode, scanned, setScanned }) {
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={StyleSheet.absoluteFillObject}
+        focusable={true}
       />
     </View>
   );
