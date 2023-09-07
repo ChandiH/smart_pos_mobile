@@ -16,6 +16,7 @@
     "@rneui/base": "^4.0.0-rc.7",
     "@rneui/themed": "^4.0.0-rc.8",
     "expo": "~49.0.8",
+    "expo-barcode-scanner": "~12.5.3",
     "expo-image-picker": "~14.1.1",
     "expo-linear-gradient": "^12.3.0",
     "expo-permissions": "~14.1.1",
@@ -23,8 +24,7 @@
     "formik": "^2.2.9",
     "react": "18.2.0",
     "react-native": "0.72.4",
-    "yup": "^1.1.1",
-    "expo-barcode-scanner": "~12.5.3"
+    "yup": "^1.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

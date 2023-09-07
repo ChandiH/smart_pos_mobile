@@ -12,19 +12,24 @@ import { SearchBarAndroid } from "@rneui/base/dist/SearchBar/SearchBar-android";
 import { getEmployees } from "../../services/fakeEmployeeService";
 import { getBranches } from "../../services/fakeBranchService";
 import colors from "../../config/colors";
+import routes from "../../navigation/routes";
 
-function EmployeesListScreen(props) {
+function EmployeesListScreen({ navigation }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [employees, setEmployees] = useState([]);
-  const [branch, setBranch] = useState([]);
 
   async function fetchEmployees() {
     const employees = await getEmployees();
-    setEmployees(employees);
-    setFilteredData(employees);
     const branch = await getBranches();
-    setBranch(branch);
+    const detailedEmployees = await employees.map((employee) => {
+      const branch_name = branch.find(
+        (b) => b.branch_id == employee.branch_id
+      )?.name;
+      return { ...employee, branch_name };
+    });
+    setEmployees(detailedEmployees);
+    setFilteredData(detailedEmployees);
   }
 
   useEffect(() => {
@@ -65,7 +70,11 @@ function EmployeesListScreen(props) {
         data={filteredData}
         renderItem={({ item: employee }) => (
           <>
-            <TouchableOpacity onPress={() => console.log(employee)}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.push(routes.EMPLOYEE_DETAIL, { employee })
+              }
+            >
               <ListItem bottomDivider>
                 <ListItem.Content>
                   <View
@@ -79,12 +88,7 @@ function EmployeesListScreen(props) {
                       <Text>{employee.name}</Text>
                     </ListItem.Title>
                     <ListItem.Subtitle>
-                      <Text>
-                        {
-                          branch.find((b) => b.branch_id === employee.branch_id)
-                            ?.name
-                        }
-                      </Text>
+                      <Text>{employee.branch_name}</Text>
                     </ListItem.Subtitle>
                   </View>
                   <ListItem.Subtitle>
