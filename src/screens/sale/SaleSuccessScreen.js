@@ -9,6 +9,7 @@ import routes from "../../navigation/routes";
 
 function SaleSuccessScreen({ navigation, route }) {
   const { summary } = route.params;
+  console.log(summary);
   const { cart, setCart } = useContext(CartContext);
 
   const getNextOrder = () => {
@@ -38,7 +39,13 @@ function SaleSuccessScreen({ navigation, route }) {
             <>
               <Divider style={{ marginVertical: 5 }} />
               <Text style={styles.infoText}>
-                Money Changes: Rs. {parseInt(summary.change)}.00
+                Money Changes: Rs.{" "}
+                {(
+                  parseInt(summary.paymentDetails) -
+                  parseFloat(summary.totalPrice) +
+                  parseFloat(summary.discount)
+                ).toFixed(0)}
+                .00
               </Text>
             </>
           )}
@@ -46,7 +53,7 @@ function SaleSuccessScreen({ navigation, route }) {
             <>
               <Divider style={{ marginVertical: 5 }} />
               <Text style={styles.infoText}>
-                Reference: {summary.referenceNumber}
+                Reference: {summary.paymentDetails}
               </Text>
             </>
           )}

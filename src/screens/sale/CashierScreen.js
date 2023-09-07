@@ -4,12 +4,12 @@ import {
   View,
   StyleSheet,
   FlatList,
-  TextInput,
   TouchableOpacity,
 } from "react-native";
 import AppButton from "../../components/AppButton";
 import PopUpModal from "../../components/PopUpModal";
-import BarCodeReader from "../../components/BarCodeReader";
+import BarCodeReader from "../../components/sale/BarCodeReader";
+import QuantityWindow from "../../components/sale/QuantityWindow";
 import { ListItem, Avatar, Button } from "@rneui/themed";
 import { SearchBarAndroid } from "@rneui/base/dist/SearchBar/SearchBar-android";
 
@@ -17,7 +17,6 @@ import { getProducts } from "../../services/fakeProductService";
 
 import CartContext from "../../context/CartContext";
 import routes from "../../navigation/routes";
-import colors from "../../config/colors";
 
 function CashierScreen({ navigation }) {
   const { cart, setCart } = useContext(CartContext);
@@ -33,7 +32,6 @@ function CashierScreen({ navigation }) {
   const [products, setProducts] = useState([]);
   const [fliteredProducts, setFilteredProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState({});
-  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     async function fetchData() {
@@ -68,24 +66,25 @@ function CashierScreen({ navigation }) {
       );
     }
     setFilteredProducts(filteredProducts);
-    console.log(filteredProducts);
   };
 
-  const addToCart = (product) => {
+  const addToCart = (quantity) => {
+    setQuantityModalVisible(!quantityModalVisible);
     const productInCart = cart.find(
-      (item) => item.product_id === product.product_id
+      (item) => item.product_id === selectedProduct.product_id
     );
     const newCart = [...cart];
     if (productInCart) {
       const index = newCart.indexOf(productInCart);
-      newCart[index].quantity += product.quantity;
+      newCart[index].quantity += quantity;
       setCart(newCart);
-      return;
+    } else {
+      newCart.push({ ...selectedProduct, quantity });
+      setCart(newCart);
     }
-    newCart.push({ ...product });
-    setCart(newCart);
-    setQuantity(1);
     setSelectedProduct({});
+    setSearchQuery("");
+    filterProduct("");
   };
 
   const popUpBarcodeSanner = () => (
@@ -113,50 +112,12 @@ function CashierScreen({ navigation }) {
         modalVisible={quantityModalVisible}
         setModalVisible={setQuantityModalVisible}
       >
-        <Text style={styles.modalText}>{selectedProduct.name}</Text>
-        <View style={styles.quantityView}>
-          <Text style={{ fontSize: 20 }}>Quantity</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Button
-              title="-"
-              onPress={() =>
-                quantity > 1
-                  ? setQuantity(parseInt(quantity) - 1)
-                  : setQuantity(1)
-              }
-              containerStyle={styles.quantityBtn}
-            />
-            <TextInput
-              style={{ height: 40, fontSize: 20, marginHorizontal: 10 }}
-              value={quantity.toString()}
-              onChangeText={(text) => setQuantity(text)}
-              keyboardType="numeric"
-            />
-            <Button
-              title="+"
-              onPress={() => setQuantity(parseInt(quantity) + 1)}
-              containerStyle={styles.quantityBtn}
-            />
-          </View>
-        </View>
-        <Button
-          containerStyle={styles.button}
-          buttonStyle={{ height: 50 }}
-          onPress={() => {
+        <QuantityWindow
+          product={selectedProduct}
+          onAddCart={addToCart}
+          onCancel={() => {
             setQuantityModalVisible(!quantityModalVisible);
-            addToCart({ ...selectedProduct, quantity: parseInt(quantity) });
-            setQuantity(1);
           }}
-          title="Add to Cart"
-        />
-        <Button
-          containerStyle={styles.button}
-          buttonStyle={{ height: 50, backgroundColor: "red" }}
-          onPress={() => {
-            setQuantityModalVisible(!quantityModalVisible);
-            setQuantity(1);
-          }}
-          title="Cancel"
         />
       </PopUpModal>
     );

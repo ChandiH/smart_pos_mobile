@@ -5,10 +5,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  TextInput,
 } from "react-native";
 import AppButton from "../../components/AppButton";
 import PopUpModal from "../../components/PopUpModal";
+import QuantityWindow from "../../components/sale/QuantityWindow";
 import { Card, ListItem, Avatar, Button } from "@rneui/themed";
 
 import CartContext from "../../context/CartContext";
@@ -19,7 +19,6 @@ function CartScreen({ navigation }) {
   const [quantityModalVisible, setQuantityModalVisible] = useState(false);
 
   const [selectedProduct, setSelectedProduct] = useState({});
-  const [quantity, setQuantity] = useState(1);
 
   const getTotalQuantity = () => {
     let totalQuantity = 0;
@@ -49,68 +48,35 @@ function CartScreen({ navigation }) {
     return parseFloat(discount).toFixed(2);
   };
 
+  const addToCart = (quantity) => {
+    setQuantityModalVisible(!quantityModalVisible);
+    const newCart = [...cart];
+    const index = newCart.findIndex(
+      (product) => product.product_id === selectedProduct.product_id
+    );
+    newCart[index].quantity = quantity;
+    setCart(newCart);
+  };
+
+  const removeFromCart = (product) => {
+    const newCart = [...cart];
+    const index = newCart.findIndex((p) => p.product_id === product.product_id);
+    newCart.splice(index, 1);
+    setCart(newCart);
+  };
+
   const popUpSetQuantity = () => {
     return (
       <PopUpModal
         modalVisible={quantityModalVisible}
         setModalVisible={setQuantityModalVisible}
       >
-        <Text style={styles.modalText}>{selectedProduct.name}</Text>
-        <View
-          style={{
-            width: "100%",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexDirection: "row",
-            paddingHorizontal: 30,
-            marginBottom: 20,
-          }}
-        >
-          <Text style={{ fontSize: 20 }}>Quantity</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Button
-              title="-"
-              onPress={() =>
-                quantity > 1
-                  ? setQuantity(parseInt(quantity) - 1)
-                  : setQuantity(1)
-              }
-              containerStyle={{ width: 40, aspectRatio: 1 }}
-            />
-            <TextInput
-              style={{ height: 40, fontSize: 20, marginHorizontal: 10 }}
-              value={quantity.toString()}
-              onChangeText={(text) => setQuantity(text)}
-              keyboardType="numeric"
-            />
-            <Button
-              title="+"
-              onPress={() => setQuantity(parseInt(quantity) + 1)}
-              containerStyle={{
-                width: 40,
-                aspectRatio: 1,
-              }}
-            />
-          </View>
-        </View>
-        <Button
-          containerStyle={styles.button}
-          buttonStyle={{ height: 50 }}
-          onPress={() => {
+        <QuantityWindow
+          product={selectedProduct}
+          onAddCart={addToCart}
+          onCancel={() => {
             setQuantityModalVisible(!quantityModalVisible);
-            addToCart({ ...selectedProduct, quantity: parseInt(quantity) });
-            setQuantity(1);
           }}
-          title="Add to Cart"
-        />
-        <Button
-          containerStyle={styles.button}
-          buttonStyle={{ height: 50, backgroundColor: "red" }}
-          onPress={() => {
-            setQuantityModalVisible(!quantityModalVisible);
-            setQuantity(1);
-          }}
-          title="Cancel"
         />
       </PopUpModal>
     );
@@ -132,7 +98,12 @@ function CartScreen({ navigation }) {
 
   const renderListItem = ({ item }) => (
     <>
-      <TouchableOpacity onPress={() => console.log("Pressed")}>
+      <TouchableOpacity
+        onPress={() => {
+          setSelectedProduct(item);
+          setQuantityModalVisible(true);
+        }}
+      >
         <ListItem bottomDivider>
           <Avatar
             source={{
@@ -159,6 +130,11 @@ function CartScreen({ navigation }) {
               </Text>
             </ListItem.Subtitle>
           </ListItem.Content>
+          <Button
+            title={"Remove"}
+            color={"red"}
+            onPress={() => removeFromCart(item)}
+          />
         </ListItem>
       </TouchableOpacity>
       <View style={{ width: "100%", height: 3 }} />

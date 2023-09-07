@@ -1,6 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Modal } from "react-native";
-
+import { View, StyleSheet, Modal, Alert } from "react-native";
 function PopUpModal({ modalVisible, setModalVisible, children }) {
   return (
     <View style={styles.centeredView}>

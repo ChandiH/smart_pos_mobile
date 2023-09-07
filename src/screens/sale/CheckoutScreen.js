@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, TextInput } from "react-native";
 import { ButtonGroup, Card } from "@rneui/themed";
 import AppButton from "../../components/AppButton";
+
+import { getCustomers } from "../../services/fakeCustomerService";
 
 import routes from "../../navigation/routes";
 
@@ -9,13 +11,45 @@ function CheckoutScreen({ navigation, route }) {
   const { bill } = route.params;
 
   const paymentMethod = ["Cash", "Credit/Debit", "Mobile Pay", "Loyalty"];
-  const [paymentMethodIndex, setPaymentMethodIndex] = React.useState(0);
+  const [paymentMethodIndex, setPaymentMethodIndex] = useState(0);
+  const [paymentDetails, setPaymentDetails] = useState("");
 
+  const [customers, setCustomers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [filteredCustomer, setfilteredCustomer] = useState({
+    name: "Guest Customer",
+    contact: "00000000000",
+  });
   const [customerAdded, setCustomerAdded] = useState(false);
+
+  useEffect(() => {
+    async function fetchData() {
+      const allCustomers = await getCustomers();
+      setCustomers(allCustomers);
+    }
+    fetchData();
+  }, []);
 
   const handleSearch = (text) => {
     setSearchQuery(text);
+    filterCustomers(text);
+  };
+
+  const filterCustomers = (query) => {
+    let Customer = [...customers];
+    if (query !== "") {
+      Customer = customers.filter(
+        (c) =>
+          c.name.toLowerCase().startsWith(query.toLowerCase()) ||
+          c.contact === query
+      );
+      if (Customer.length) return setfilteredCustomer(Customer[0]);
+    }
+    setfilteredCustomer({
+      name: "Guest Customer",
+      contact: "00000000000",
+    });
+    console.log(Customer);
   };
 
   const renderDetail = (label, value) => (
@@ -43,8 +77,8 @@ function CheckoutScreen({ navigation, route }) {
           onChangeText={handleSearch}
           value={searchQuery}
         />
-        {renderDetail("Name", "John Doe")}
-        {renderDetail("Contact", "09123456789")}
+        {renderDetail("Name", filteredCustomer.name)}
+        {renderDetail("Contact", filteredCustomer.contact)}
       </Card>
       <Card>
         <Card.Title>Payment Method</Card.Title>
@@ -53,7 +87,10 @@ function CheckoutScreen({ navigation, route }) {
           buttonStyle={{ width: 100 }}
           buttonContainerStyle={{}}
           buttons={paymentMethod.slice(0, 2)}
-          onPress={(index) => setPaymentMethodIndex(index)}
+          onPress={(index) => {
+            setPaymentMethodIndex(index);
+            setPaymentDetails("");
+          }}
           selectedIndex={paymentMethodIndex}
         />
         <ButtonGroup
@@ -61,7 +98,10 @@ function CheckoutScreen({ navigation, route }) {
           buttonContainerStyle={{}}
           buttons={paymentMethod.slice(2, 4)}
           disabled={customerAdded ? [0] : [0, 1]}
-          onPress={(index) => setPaymentMethodIndex(index + 2)}
+          onPress={(index) => {
+            setPaymentMethodIndex(index + 2);
+            setPaymentDetails("");
+          }}
           selectedIndex={paymentMethodIndex - 2}
         />
         {paymentMethodIndex === 0 && (
@@ -86,8 +126,8 @@ function CheckoutScreen({ navigation, route }) {
             <TextInput
               style={[styles.textInput, { width: "50%" }]}
               placeholder="Enter amount"
-              onChangeText={handleSearch}
-              value={searchQuery}
+              onChangeText={(text) => setPaymentDetails(text)}
+              value={paymentDetails}
               keyboardType="numeric"
             />
           </View>
@@ -96,8 +136,8 @@ function CheckoutScreen({ navigation, route }) {
           <TextInput
             style={styles.textInput}
             placeholder="Bill Reference Number"
-            onChangeText={handleSearch}
-            value={searchQuery}
+            onChangeText={(text) => setPaymentDetails(text)}
+            value={paymentDetails}
           />
         )}
       </Card>
@@ -120,9 +160,8 @@ function CheckoutScreen({ navigation, route }) {
               summary: {
                 ...bill,
                 paymentMethod: paymentMethod[paymentMethodIndex],
-                cashGiven: 0,
-                change: 0,
-                referenceNumber: "0000000-1111111",
+                paymentDetails: paymentDetails,
+                customer: filteredCustomer,
               },
             })
           }
