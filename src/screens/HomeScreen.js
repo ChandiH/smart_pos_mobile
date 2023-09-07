@@ -4,6 +4,7 @@ import Screen from "../components/Screen";
 
 import UserContext from "../context/UserContext";
 import routes from "../navigation/routes";
+import { Alert } from "react-native";
 
 function HomeScreen({ navigation }) {
   const { user, setUser } = useContext(UserContext);
@@ -15,7 +16,6 @@ function HomeScreen({ navigation }) {
   return (
     <Screen style={{}}>
       <Text>Common</Text>
-      <Button title="Login" onPress={() => navigation.navigate(routes.LOGIN)} />
       <Button
         title="Profile"
         onPress={() => navigation.navigate(routes.PROFILE)}
@@ -73,7 +73,7 @@ function HomeScreen({ navigation }) {
       />
       <Button
         title="Employee Detail"
-        onPress={() => navigation.navigate(routes.EMPLOYEE_DETAIL)}
+        onPress={() => Alert.alert("navigate through employee list screen")}
       />
       {/* ORDER */}
       <Text>Order</Text>
