@@ -3,7 +3,7 @@ export const products = [
     product_id: 1,
     name: "Muffin Chocolate Individual Wrap",
     description: "Pork - Tenderloin, Frozen",
-    category: "Comedy|Drama|Romance",
+    category: "Biscuits",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -21,7 +21,7 @@ export const products = [
     product_id: 2,
     name: "Longos - Greek Salad",
     description: "Wild Boar - Tenderloin",
-    category: "Drama|Romance",
+    category: "Salad",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -39,7 +39,7 @@ export const products = [
     product_id: 3,
     name: "Wine - Guy Sage Touraine",
     description: "Wine - Sauvignon Blanc Oyster",
-    category: "Drama|Thriller|War",
+    category: "Liquor",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -57,7 +57,7 @@ export const products = [
     product_id: 4,
     name: "Oil - Coconut",
     description: "Pie Shell - 9",
-    category: "Drama|Sci-Fi",
+    category: "Biscuits|Snacks",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -75,7 +75,7 @@ export const products = [
     product_id: 5,
     name: "Lemon Tarts",
     description: "Sauce - Oyster",
-    category: "Drama",
+    category: "sweet",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -93,7 +93,7 @@ export const products = [
     product_id: 6,
     name: "Sea Bass - Whole",
     description: "Cheese - Roquefort Pappillon",
-    category: "Action|Comedy|Crime|Thriller",
+    category: "Cheese",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -111,7 +111,7 @@ export const products = [
     product_id: 7,
     name: "Tea - Decaf 1 Cup",
     description: "Black Currants",
-    category: "Drama",
+    category: "Tea",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -129,7 +129,7 @@ export const products = [
     product_id: 8,
     name: "Wine - Ej Gallo Sonoma",
     description: "Cheese - Perron Cheddar",
-    category: "Comedy|Drama|Musical|Mystery",
+    category: "Wine|Beer|Spirit",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -147,7 +147,7 @@ export const products = [
     product_id: 9,
     name: "Pasta - Canelloni, Single Serve",
     description: "Chicken - Wieners",
-    category: "Adventure|Documentary",
+    category: "foods",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -165,7 +165,7 @@ export const products = [
     product_id: 10,
     name: "Celery Root",
     description: "Hipnotiq Liquor",
-    category: "Sci-Fi",
+    category: "Liquor",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -183,7 +183,7 @@ export const products = [
     product_id: 11,
     name: "Soup - Cream Of Broccoli",
     description: "Pears - Bosc",
-    category: "Action|Comedy|Crime",
+    category: "Soup",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -201,7 +201,7 @@ export const products = [
     product_id: 12,
     name: "Cake - French Pear Tart",
     description: "Cheese - Brie, Triple Creme",
-    category: "Drama",
+    category: "Cheese",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -219,7 +219,7 @@ export const products = [
     product_id: 13,
     name: "Chocolate - Pistoles, Lactee, Milk",
     description: "Dates",
-    category: "Action|Drama|Fantasy",
+    category: "Nuts|snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -237,7 +237,7 @@ export const products = [
     product_id: 14,
     name: "Cherries - Bing, Canned",
     description: "Flour - So Mix Cake White",
-    category: "Comedy|Drama",
+    category: "Biscuits|Snacks|sweet",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -255,7 +255,7 @@ export const products = [
     product_id: 15,
     name: "Sauce - White, Mix",
     description: "Olives - Black, Pitted",
-    category: "Drama",
+    category: "Sauce|Snacks|sweet",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -273,7 +273,7 @@ export const products = [
     product_id: 16,
     name: "Pear - Halves",
     description: "Artichokes - Knobless, White",
-    category: "Documentary",
+    category: "Snacks|sweet|Tea",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -291,7 +291,7 @@ export const products = [
     product_id: 17,
     name: "Snapple Lemon Tea",
     description: "Rum - Cream, Amarula",
-    category: "Drama",
+    category: "Tea|sweet|Western",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -309,7 +309,7 @@ export const products = [
     product_id: 18,
     name: "Venison - Denver Leg Boneless",
     description: "Cakes Assorted",
-    category: "Comedy|Drama",
+    category: "Biscuits|Snacks|sweet|Tea|Western",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -327,7 +327,7 @@ export const products = [
     product_id: 19,
     name: "Hold Up Tool Storage Rack",
     description: "Pepper - Cayenne",
-    category: "Drama",
+    category: "Biscuits|Snacks|sweet|Tea|Western",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -345,7 +345,7 @@ export const products = [
     product_id: 20,
     name: "Beef - Rib Roast, Capless",
     description: "Wine - Niagara Peninsula Vqa",
-    category: "Documentary|Musical",
+    category: "Liquor",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -363,7 +363,7 @@ export const products = [
     product_id: 21,
     name: "Ice Cream Bar - Oreo Sandwich",
     description: "Wine - Cava Aria Estate Brut",
-    category: "Drama|Musical",
+    category: "sweet|Tea|Western",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -381,7 +381,7 @@ export const products = [
     product_id: 22,
     name: "Wine - Rosso Del Veronese Igt",
     description: "Wine - Red, Gamay Noir",
-    category: "Comedy|Drama",
+    category: "liquor|sweet|Tea|Western",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -399,7 +399,7 @@ export const products = [
     product_id: 23,
     name: "Swiss Chard",
     description: "Russian Prince",
-    category: "Drama",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -417,7 +417,7 @@ export const products = [
     product_id: 24,
     name: "Apple - Northern Spy",
     description: "Sun - Dried Tomatoes",
-    category: "Drama|War",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -435,7 +435,7 @@ export const products = [
     product_id: 25,
     name: "Onions - Cippolini",
     description: "Cheese - Manchego, Spanish",
-    category: "Drama",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -453,7 +453,7 @@ export const products = [
     product_id: 26,
     name: "Appetizer - Tarragon Chicken",
     description: "Beef - Sushi Flat Iron Steak",
-    category: "Western",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -471,7 +471,7 @@ export const products = [
     product_id: 27,
     name: "Ham - Procutinni",
     description: "Veal - Leg",
-    category: "Drama",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -489,7 +489,7 @@ export const products = [
     product_id: 28,
     name: "Pepper - Red, Finger Hot",
     description: "Fruit Salad Deluxe",
-    category: "Horror",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -507,7 +507,7 @@ export const products = [
     product_id: 29,
     name: "Soup - Campbells, Cream Of",
     description: "Oil - Pumpkinseed",
-    category: "Crime|Drama|Romance",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -525,7 +525,7 @@ export const products = [
     product_id: 30,
     name: "Fond - Neutral",
     description: "Langers - Cranberry Cocktail",
-    category: "Thriller",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -543,7 +543,7 @@ export const products = [
     product_id: 31,
     name: "Rye Special Old",
     description: "Cocktail Napkin Blue",
-    category: "Documentary",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -561,7 +561,7 @@ export const products = [
     product_id: 32,
     name: "Wine - Jafflin Bourgongone",
     description: "Jam - Blackberry, 20 Ml Jar",
-    category: "Drama|Mystery",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -579,7 +579,7 @@ export const products = [
     product_id: 33,
     name: "Sugar - Invert",
     description: "Pasta - Cheese / Spinach Bauletti",
-    category: "Comedy|Musical",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -597,7 +597,7 @@ export const products = [
     product_id: 34,
     name: "Duck - Fat",
     description: "Flavouring - Raspberry",
-    category: "Comedy|Romance",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -615,7 +615,7 @@ export const products = [
     product_id: 35,
     name: "Steamers White",
     description: "Wine - White Cab Sauv.on",
-    category: "Drama",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -633,7 +633,7 @@ export const products = [
     product_id: 36,
     name: "Stock - Beef, White",
     description: "Cake - Dulce De Leche",
-    category: "Action|Adventure|Animation|Children",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -651,7 +651,7 @@ export const products = [
     product_id: 37,
     name: "Jolt Cola - Red Eye",
     description: "Garbag Bags - Black",
-    category: "Drama",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -669,7 +669,7 @@ export const products = [
     product_id: 38,
     name: "Chocolate - Compound Coating",
     description: "Blueberries",
-    category: "Drama",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -687,7 +687,7 @@ export const products = [
     product_id: 39,
     name: "Cheese - Cheddarsliced",
     description: "Veal - Shank, Pieces",
-    category: "Drama",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -705,7 +705,7 @@ export const products = [
     product_id: 40,
     name: "Onions - Cooking",
     description: "Lettuce Romaine Chopped",
-    category: "Comedy|Drama|Romance",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -723,7 +723,7 @@ export const products = [
     product_id: 41,
     name: "Calaloo",
     description: "Lemons",
-    category: "Horror|Sci-Fi",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -741,7 +741,7 @@ export const products = [
     product_id: 42,
     name: "Lemon Tarts",
     description: "Pate Pans Yellow",
-    category: "Drama|Romance",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -759,7 +759,7 @@ export const products = [
     product_id: 43,
     name: "Pasta - Cannelloni, Sheets, Fresh",
     description: "Chocolate - Mi - Amere Semi",
-    category: "Action|Adventure|Romance|Thriller",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -777,7 +777,7 @@ export const products = [
     product_id: 44,
     name: "Bagel - Whole White Sesame",
     description: "Sour Puss - Tangerine",
-    category: "Comedy|Drama|Musical",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -795,7 +795,7 @@ export const products = [
     product_id: 45,
     name: "Sobe - Lizard Fuel",
     description: "Cabbage - Savoy",
-    category: "Comedy",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -813,7 +813,7 @@ export const products = [
     product_id: 46,
     name: "Oxtail - Cut",
     description: "Spring Roll Veg Mini",
-    category: "Drama|Romance",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -831,7 +831,7 @@ export const products = [
     product_id: 47,
     name: "Mushroom - Enoki, Dry",
     description: "Wine - Red, Pinot Noir, Chateau",
-    category: "Drama",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -849,7 +849,7 @@ export const products = [
     product_id: 48,
     name: "Beef - Ox Tongue",
     description: "Boogies",
-    category: "Drama|Horror|Thriller",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -867,7 +867,7 @@ export const products = [
     product_id: 49,
     name: "Bread - Rolls, Rye",
     description: "Energy - Boo - Koo",
-    category: "Children|Comedy|Drama",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",
@@ -885,7 +885,7 @@ export const products = [
     product_id: 50,
     name: "Propel Sport Drink",
     description: "Cheese - Mozzarella, Buffalo",
-    category: "Drama|Film-Noir|Thriller",
+    category: "Sweet|Snack",
     image: [
       "https://placehold.co/600x400/png",
       "https://placehold.co/200x200/png",

@@ -73,7 +73,7 @@ function SaleSuccessScreen({ navigation, route }) {
             buttonStyle={styles.middleBtn}
             titleStyle={{ color: colors.blue }}
             title="Send Reciept"
-            onPress={() => navigation.navigate(routes.HOME)}
+            onPress={() => console.log("share functionality is not added yet")}
           />
         </View>
       </View>

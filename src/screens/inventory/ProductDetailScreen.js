@@ -109,8 +109,9 @@ function productDetailScreen({ route }) {
           />
         )}
         <View style={{ flexDirection: "row", marginBottom: 10 }}>
-          {product.image.slice(1).map((imgUri) => (
+          {product.image.slice(1).map((imgUri, index) => (
             <ImageItem
+              key={index}
               imageUri={imgUri}
               imageStyle={styles.leftImage}
               viewStyle={{ width: "30%", aspectRatio: 1 }}
