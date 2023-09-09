@@ -4,6 +4,11 @@ import { getEmployee } from "./fakeEmployeeService";
 const users = [
   {
     employee_id: 1,
+    userName: "Admin",
+    password: "1111",
+  },
+  {
+    employee_id: 1,
     userName: "Somesh",
     password: "1111",
   },
@@ -16,6 +21,11 @@ const users = [
     employee_id: 3,
     userName: "Dinithi",
     password: "3333",
+  },
+  {
+    employee_id: 5,
+    userName: "Guest",
+    password: "4444",
   },
 ];
 

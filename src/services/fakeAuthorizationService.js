@@ -20,6 +20,7 @@ const userRoles = [
     name: "Owner",
     access: [
       "employee",
+      "employeeDetail",
       "inventory",
       "customers",
       "customerForm",
@@ -27,6 +28,8 @@ const userRoles = [
       "productCatalog",
       "productForm",
       "stockUpdateForm",
+      "sale",
+      "saleHistory",
     ],
     description:
       "The owner role has full control and authority over the business or organization. Owners make critical decisions and have access to all resources.",
@@ -34,14 +37,22 @@ const userRoles = [
   {
     userRole_id: 102,
     name: "Manager",
-    access: ["employee", "inventory", "customer", "productCatalog"],
+    access: [
+      "employee",
+      "employeeDetail",
+      "customers",
+      "customerForm",
+      "inventory",
+      "productForm",
+      "productCatalog",
+    ],
     description:
       "Managers are responsible for overseeing daily operations and supervising staff. They have access to most resources and can make important decisions within their department.",
   },
   {
     userRole_id: 103,
     name: "Cashier",
-    access: ["customer", "productCatalog"],
+    access: ["customerForm", "productCatalog", "sale"],
     description:
       "Cashiers handle customer transactions, manage the cash register, and provide customer service. They have limited access to administrative functions.",
   },

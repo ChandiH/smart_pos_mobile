@@ -8,8 +8,10 @@ type propTypes = {
 };
 const AppButton = ({ title, onPress }: propTypes) => {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
-      <Text style={styles.text}>{title}</Text>
+    <TouchableOpacity testID="button" style={styles.button} onPress={onPress}>
+      <Text testID="label" style={styles.text}>
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 };

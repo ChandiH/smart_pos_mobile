@@ -1,9 +1,11 @@
 import React from "react";
 import { View, StyleSheet, Modal, Alert } from "react-native";
+
 function PopUpModal({ modalVisible, setModalVisible, children }) {
   return (
     <View style={styles.centeredView}>
       <Modal
+        testID="modal"
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -13,7 +15,9 @@ function PopUpModal({ modalVisible, setModalVisible, children }) {
         }}
       >
         <View style={styles.centeredView}>
-          <View style={styles.modalView}>{children}</View>
+          <View testID="container" style={styles.modalView}>
+            {children}
+          </View>
         </View>
       </Modal>
     </View>

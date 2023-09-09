@@ -11,4 +11,5 @@ export default {
   linearbtn3: "#580475",
   linearBtn: ["#628EFF", "#8740CD", "#580475"],
   blue: "#0D62CA",
+  androidBtnBlue: "#2196F3",
 };

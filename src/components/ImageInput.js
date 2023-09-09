@@ -49,7 +49,7 @@ function ImageInput({ imageUri, onChangeImage }) {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={handlePress}>
+    <TouchableWithoutFeedback testID="touchable" onPress={handlePress}>
       <View style={styles.inputBox}>
         <>
           {!imageUri && <MaterialCommunityIcons name="camera" size={30} />}

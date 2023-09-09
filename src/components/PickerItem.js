@@ -5,7 +5,7 @@ import AppText from "./AppText";
 
 function PickerItem({ label, onPress }) {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity testID="touchable" onPress={onPress}>
       <AppText style={styles.text}>{label}</AppText>
     </TouchableOpacity>
   );
@@ -14,6 +14,7 @@ function PickerItem({ label, onPress }) {
 const styles = StyleSheet.create({
   text: {
     padding: 20,
+    color: "black",
   },
 });
 

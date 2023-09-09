@@ -8,10 +8,10 @@ import CartContext from "./src/context/CartContext";
 import { getEmployees } from "./src/services/fakeEmployeeService";
 
 export default function App() {
-  // const [user, setUser] = React.useState(null);
-  const [user, setUser] = React.useState(
-    getEmployees().find((c) => c.id === 1)
-  );
+  const [user, setUser] = React.useState(null);
+  // const [user, setUser] = React.useState(
+  //   getEmployees().find((c) => c.id === 1)
+  // );
   const [cart, setCart] = React.useState([]);
 
   return (

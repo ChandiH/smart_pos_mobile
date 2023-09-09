@@ -9,7 +9,7 @@ function SubmitButton({ title, width }) {
   const { handleSubmit } = useFormikContext();
 
   return (
-    <TouchableOpacity onPress={handleSubmit} style={{ width }}>
+    <TouchableOpacity testID="submit" onPress={handleSubmit} style={{ width }}>
       <LinearGradient style={styles.button} colors={colors.linearBtn}>
         <Text style={styles.text}>{title}</Text>
       </LinearGradient>
