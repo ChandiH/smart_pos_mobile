@@ -16,24 +16,15 @@ import {
   FormInputField,
 } from "../../components/forms";
 import Screen from "../../components/Screen";
-
-import { saveProduct } from "../../services/productService";
-import customStyles from "../../config/customStyles";
 import { Icon, Button } from "@rneui/themed";
 import PopUpModal from "../../components/PopUpModal";
 import BarCodeReader from "../../components/sale/BarCodeReader";
 
-const categories = [
-  { label: "Furniture", value: 1 },
-  { label: "Clothing", value: 2 },
-  { label: "Camera", value: 3 },
-];
+import customStyles from "../../config/customStyles";
 
-const suppliers = [
-  { label: "Furniture", value: 1 },
-  { label: "Clothing", value: 2 },
-  { label: "Camera", value: 3 },
-];
+import { saveProduct } from "../../services/productService";
+import { getCategories } from "../../services/categoryService";
+import { getSuppliers } from "../../services/supplierService";
 
 const initialValues = {
   product_name: "",
@@ -57,16 +48,6 @@ const validationSchema = Yup.object().shape({
   product_barcode: Yup.string().label("Barcode"),
   supplier_id: Yup.object().required().nullable().label("Supplier"),
   images: Yup.array().min(1, "Please select at least one image."),
-  // title: Yup.string().required().label("name"),
-  // buyingPrice: Yup.number().required().min(1).max(10000).label("Buying Price"),
-  // retailPrice: Yup.number().required().min(1).max(10000).label("Retail Price"),
-  // category: Yup.object().required().nullable().label("Category"),
-  // images: Yup.array().min(1, "Please select at least one image."),
-  // weight: Yup.number().required().min(1).max(10000).label("Weight"),
-  // units: Yup.number().required().min(1).max(10000).label("Units"),
-  // barcode: Yup.string().min(1).max(10000).label("Barcode"),
-  // supplier: Yup.object().required().nullable().label("Supplier"),
-  // description: Yup.string().label("Description"),
 });
 
 function AddProduct(props) {
@@ -74,6 +55,33 @@ function AddProduct(props) {
   const [barcodeModalVisible, setBarcodeModalVisible] = React.useState(false);
   const [scanned, setScanned] = React.useState(false);
   const [barcode, setBarcode] = React.useState("");
+
+  const [categories, setCategories] = React.useState([]);
+  const [suppliers, setSuppliers] = React.useState([]);
+
+  const fetchData = async () => {
+    try {
+      const { data: categories } = await getCategories();
+      const { data: suppliers } = await getSuppliers();
+      const formattedCategories = categories.map((category) => ({
+        value: category.category_id,
+        label: category.category_name,
+      }));
+      const formattedSuppliers = suppliers.map((supplier) => ({
+        value: supplier.supplier_id,
+        label: supplier.supplier_name,
+      }));
+      setCategories(formattedCategories);
+      setSuppliers(formattedSuppliers);
+    } catch (e) {
+      console.log("Error in fetching Categories");
+      alert(e.response.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   useEffect(() => {
     if (scanned) {
@@ -230,7 +238,7 @@ function AddProduct(props) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: customStyles.colors.background2,
+    // backgroundColor: customStyles.colors.background2,
     padding: 10,
     flex: 1,
     alignItems: "center",

@@ -88,8 +88,8 @@ function LoginScreen({ navigation }) {
       <Text style={styles.forgerPswrd}>Forgot Password?</Text>
       <View style={styles.noteContainer}>
         <Text style={styles.note}>
-          Use the Employee ID that can be created by the Owner or Manager in
-          Manage Store -{">"} Employee Code
+          Use the Employee Account that can be created by the Owner or Manager
+          in Employee Management -{">"} Add New Employee
         </Text>
       </View>
     </Screen>

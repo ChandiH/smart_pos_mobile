@@ -107,7 +107,6 @@ function AddCustomerScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     padding: 10,
-    backgroundColor: customStyles.colors.background2,
     flex: 1,
     alignItems: "center",
   },
