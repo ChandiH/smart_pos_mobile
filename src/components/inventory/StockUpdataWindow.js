@@ -36,10 +36,10 @@ const StockUpdateWindow = ({ product, onUpdate, onCancel }) => {
   return (
     <View>
       <Text style={styles.modalText}>Current Stock</Text>
-      {renderDetail("Product Name", product.name)}
-      {renderDetail("Branch Name", product.branchName)}
-      {renderDetail("Quantity", product.branchStock.quantity)}
-      {renderDetail("last updated At", product.branchStock.updatedAt)}
+      {renderDetail("Product Name", product.product_name)}
+      {renderDetail("Branch Name", product.branch_name)}
+      {renderDetail("Quantity", product.quantity)}
+      {renderDetail("last updated At", product.updated_on?.slice(0, 16))}
       <Text style={styles.modalText}>Update Stock</Text>
       <View style={styles.quantityView}>
         <Text style={{ fontSize: 20 }}>Quantity</Text>

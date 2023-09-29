@@ -37,12 +37,11 @@ function EmployeeDetailScreen({ route }) {
         size={"xlarge"}
       />
       <View style={{ width: "100%", padding: 10 }}>
-        {renderDetail("User Name", employee.userName)}
-        {renderDetail("Name", employee.name)}
-        {renderDetail("Email", employee.email)}
-        {renderDetail("Phone", employee.phone)}
+        {renderDetail("Name", employee.employee_name)}
+        {renderDetail("Email", employee.employee_email)}
+        {renderDetail("Phone", employee.employee_phone)}
         {renderDetail("Assigned Branch", employee.branch_name)}
-        {renderDetail("Role", employee.userRole_name)}
+        {renderDetail("Role", employee.role_name)}
       </View>
     </View>
   );

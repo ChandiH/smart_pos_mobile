@@ -13,7 +13,7 @@ import QuantityWindow from "../../components/sale/QuantityWindow";
 import { ListItem, Avatar, Button } from "@rneui/themed";
 import { SearchBarAndroid } from "@rneui/base/dist/SearchBar/SearchBar-android";
 
-import { getProducts } from "../../services/fakeProductService";
+import { getProducts } from "../../services/productService";
 
 import CartContext from "../../context/CartContext";
 import routes from "../../navigation/routes";
@@ -30,15 +30,20 @@ function CashierScreen({ navigation }) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const [products, setProducts] = useState([]);
-  const [fliteredProducts, setFilteredProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState({});
 
-  useEffect(() => {
-    async function fetchData() {
-      const allProduct = await getProducts();
+  async function fetchData() {
+    try {
+      const { data: allProduct } = await getProducts();
       setProducts(allProduct);
       setFilteredProducts(allProduct);
+    } catch (e) {
+      console.log(e);
     }
+  }
+
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -61,8 +66,8 @@ function CashierScreen({ navigation }) {
     if (query !== "") {
       filteredProducts = products.filter(
         (item) =>
-          item.name.toLowerCase().startsWith(query.toLowerCase()) ||
-          item.barcode.toLowerCase().startsWith(query.toLowerCase())
+          item.product_name.toLowerCase().startsWith(query.toLowerCase()) ||
+          item.product_barcode.toLowerCase().startsWith(query.toLowerCase())
       );
     }
     setFilteredProducts(filteredProducts);
@@ -134,18 +139,18 @@ function CashierScreen({ navigation }) {
         <ListItem bottomDivider>
           <Avatar
             source={{
-              uri: item.image[0],
+              uri: item.product_image[0],
             }}
           />
           <ListItem.Content>
             <ListItem.Title>
-              <Text>{item.name}</Text>
+              <Text>{item.product_name}</Text>
             </ListItem.Title>
             <ListItem.Subtitle>
-              <Text>{item.category}</Text>
+              <Text>{item.category_name}</Text>
             </ListItem.Subtitle>
             <ListItem.Subtitle>
-              <Text>{item.retailPrice}</Text>
+              <Text>{item.retail_price}</Text>
             </ListItem.Subtitle>
           </ListItem.Content>
         </ListItem>
@@ -163,9 +168,9 @@ function CashierScreen({ navigation }) {
       />
       <FlatList
         style={{ marginBottom: 120 }}
-        data={fliteredProducts}
+        data={filteredProducts}
         renderItem={rederListItem}
-        keyExtractor={(item) => item.barcode}
+        keyExtractor={(item) => item.product_barcode}
       />
 
       {/* Button */}

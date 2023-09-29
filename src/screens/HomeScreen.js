@@ -7,29 +7,27 @@ import {
   View,
   Alert,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Screen from "../components/Screen";
 
 import UserContext from "../context/UserContext";
 import routes from "../navigation/routes";
 import colors from "../config/colors";
-import { getUserRole } from "../services/fakeAuthorizationService";
+
+import { checkAccess } from "../services/authorizationService";
 
 function HomeScreen({ navigation }) {
   const { user, setUser } = useContext(UserContext);
-  const [access, setAccess] = useState([]);
-  const accessFreeList = ["productList", "productDetail", "profile", "logout"];
+  const accessFreeList = ["sale", "profile", "logout"];
 
   useEffect(() => {
     if (!user) navigation.replace(routes.LOGIN);
-    else setAccess(getUserRole(user.userRole_id).access);
   }, [user]);
 
   const Button = ({ title, onPress, accessKey }) => {
-    const disable =
-      access.find((a) => a === accessKey) ||
-      accessFreeList.find((a) => a === accessKey)
-        ? false
-        : true;
+    const accessGranted =
+      checkAccess(user?.user_access, accessKey) ||
+      accessFreeList.includes(accessKey);
     const alert = () =>
       Alert.alert(
         "Access Denied",
@@ -38,8 +36,8 @@ function HomeScreen({ navigation }) {
     return (
       <TouchableOpacity
         testID="button"
-        style={disable ? styles.disabledBtn : styles.button}
-        onPress={disable ? alert : onPress}
+        style={accessGranted ? styles.button : styles.disabledBtn}
+        onPress={accessGranted ? onPress : alert}
       >
         <Text testID="label" style={styles.btnTitle}>
           {title}
@@ -65,41 +63,18 @@ function HomeScreen({ navigation }) {
         />
         {/* INVENTORY */}
         <Text style={styles.text}>Inventory Management</Text>
+        {/*
+         * error in uploading images
+         */}
         <Button
           title="Add Product"
           accessKey="productForm"
           onPress={() => navigation.navigate(routes.ADD_PRODUCT)}
         />
         <Button
-          title="Product List"
-          accessKey="productList"
+          title="Product Catelog"
+          accessKey="inventory"
           onPress={() => navigation.navigate(routes.PRODUCT_LIST)}
-        />
-        <Button
-          title="Product Detail"
-          accessKey="productDetail"
-          onPress={() =>
-            navigation.navigate(routes.PRODUCT_DETAIL, {
-              product: {
-                product_id: 1,
-                name: "Muffin Chocolate Individual Wrap",
-                description: "Pork - Tenderloin, Frozen",
-                category: "Comedy|Drama|Romance",
-                image: [
-                  "https://placehold.co/600x400/png",
-                  "https://placehold.co/200x200/png",
-                  "https://placehold.co/200x200/png",
-                ],
-                weight: 100,
-                unit: 1,
-                buyingPrice: "Rs. 48.67",
-                retailPrice: "Rs. 8.85",
-                discount: 1,
-                barcode: "55154-5980",
-                supplier_id: 98,
-              },
-            })
-          }
         />
         {/* EMPLOYEE */}
         <Text style={styles.text}>Employee Management</Text>
@@ -110,7 +85,7 @@ function HomeScreen({ navigation }) {
         />
         <Button
           title="Employee Detail"
-          accessKey="employeeDetail"
+          accessKey="employeeDetails"
           onPress={() =>
             Alert.alert("please, navigate through employee list screen")
           }
@@ -142,7 +117,10 @@ function HomeScreen({ navigation }) {
         <Button
           title="Log Out"
           accessKey="logout"
-          onPress={() => setUser(null) && navigation.navigate(routes.LOGIN)}
+          onPress={async () => {
+            await AsyncStorage.removeItem("token");
+            setUser(null);
+          }}
         />
         <View style={{ height: 50 }} />
       </ScrollView>

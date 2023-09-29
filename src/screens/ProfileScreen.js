@@ -1,29 +1,17 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { View, StyleSheet, Text } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Avatar } from "@rneui/themed";
 import AppButton from "../components/AppButton";
 
 import UserContext from "../context/UserContext";
 
-import { getBranch } from "../services/fakeBranchService";
-
 function ProfileScreen({ navigation }) {
   const { user, setUser } = useContext(UserContext);
-  const [userDetails, setUserDetails] = useState({});
 
   useEffect(() => {
-    const branch = getBranch(user.branch_id);
-    setUserDetails({
-      ...user,
-      branch_name: branch.name,
-      image:
-        "https://cdn.pixabay.com/photo/2020/09/18/05/58/lights-5580916__340.jpg",
-    });
-  }, []);
-
-  useEffect(() => {
-    console.log("userDetails", userDetails);
-  }, [userDetails]);
+    console.log("user", user);
+  }, [user]);
 
   const renderDetail = (label, value) => (
     <View
@@ -47,10 +35,10 @@ function ProfileScreen({ navigation }) {
     console.log("change password");
   };
 
-  const handleLogOut = () => {
+  const handleLogOut = async () => {
+    await AsyncStorage.removeItem("token");
+    navigation.goBack();
     setUser(null);
-    console.log("logout");
-    navigation.popToTop();
   };
 
   return (
@@ -58,17 +46,17 @@ function ProfileScreen({ navigation }) {
       <Avatar
         containerStyle={styles.image}
         source={{
-          uri: userDetails.image,
+          uri: user?.employee_image,
         }}
         size={"xlarge"}
       />
       <View style={{ width: "100%", padding: 10 }}>
-        {renderDetail("User Name", userDetails.userName)}
-        {renderDetail("Name", userDetails.name)}
-        {renderDetail("Email", userDetails.email)}
-        {renderDetail("Phone", userDetails.phone)}
-        {renderDetail("Assigned Branch", userDetails.branch_name)}
-        {renderDetail("Role", userDetails.userRole_name)}
+        {renderDetail("User Name", user.employee_username)}
+        {renderDetail("Name", user.employee_name)}
+        {renderDetail("Email", user.employee_email)}
+        {renderDetail("Phone", user.employee_phone)}
+        {renderDetail("Assigned Branch", user.branch_name)}
+        {renderDetail("Role", user.role_name)}
 
         <AppButton title="Edit" onPress={handleProfileEdit} />
         <AppButton title="Change Password" onPress={handleChangePassword} />

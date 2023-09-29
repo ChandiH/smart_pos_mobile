@@ -6,56 +6,36 @@ import PopUpModal from "../../components/PopUpModal";
 import StockUpdateWindow from "../../components/inventory/StockUpdataWindow";
 import UserContext from "../../context/UserContext";
 
-import { getInventoryByProduct } from "../../services/fakeInventoryService";
-import { getBranches } from "../../services/fakeBranchService";
-
-// const product = {
-//   product_id: 1,
-//   name: "Muffin Chocolate Individual Wrap",
-//   description: "Pork - Tenderloin, Frozen",
-//   category: "Comedy|Drama|Romance",
-//   image: [
-//     "https://placehold.co/600x400/png",
-//     "https://placehold.co/200x200/png",
-//     "https://placehold.co/200x200/png",
-//   ],
-//   weight: 100,
-//   unit: 1,
-//   buyingPrice: "Rs. 48.67",
-//   retailPrice: "Rs. 8.85",
-//   discount: 1,
-//   barcode: "55154-5980",
-//   supplier_id: 98,
-// };
+import {
+  getInventoryByProduct,
+  updateInventory,
+} from "../../services/inventoryService";
 
 function productDetailScreen({ route }) {
   const { user } = useContext(UserContext);
   const [product, setProduct] = useState(route.params.product);
+  const [branchStock, setBranchStock] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [branches, setBranches] = useState([]);
 
   const fetchStock = async () => {
     const product_id = route.params.product.product_id;
-    const detailedProduct = await getInventoryByProduct(product_id);
-    const branch = await getBranches();
-    const currentBranch = branch.find((b) => b.branch_id === user.branch_id);
-    setBranches(branch);
-
-    if (detailedProduct) {
-      const branchStock = detailedProduct.stock.find(
-        (b) => b.branch_id === user.branch_id
+    try {
+      const { data: inventory } = await getInventoryByProduct(product_id);
+      const stock = inventory.find(
+        (stock) => stock.branch_id === user.branch_id
       );
-      setProduct({
-        ...detailedProduct,
-        branchName: currentBranch.name,
-        branchStock: branchStock,
-      });
-    } else {
-      setProduct({
-        ...product,
-        branchName: currentBranch.name,
-        branchStock: { updatedAt: "never", quantity: 0 },
-      });
+      const currentBranchStock = stock
+        ? stock
+        : {
+            ...route.params.product,
+            branch_id: user.branch_id,
+            branch_name: user.branch_name,
+            quantity: 0,
+            reorder_level: 0,
+          };
+      setBranchStock(currentBranchStock);
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -63,12 +43,21 @@ function productDetailScreen({ route }) {
     fetchStock();
   }, []);
 
-  const onStockUpdate = (quantity) => {
+  const onStockUpdate = async (quantity) => {
     setModalVisible(false);
-    const newProduct = { ...product };
-    newProduct.branchStock.quantity += quantity;
-    newProduct.branchStock.updatedAt = new Date().toDateString();
-    setProduct(newProduct);
+    // console.log(quantity);
+    try {
+      const promise = updateInventory({
+        branch_id: user.branch_id,
+        product_id: branchStock.product_id,
+        quantity: branchStock.quantity + quantity,
+        reorder_level: branchStock.reorder_level,
+      });
+      await promise;
+      fetchData();
+    } catch (e) {
+      console.log("Error Occured", e.response);
+    }
   };
 
   const onCancel = () => {
@@ -91,7 +80,7 @@ function productDetailScreen({ route }) {
   const stockUpdateModal = () => (
     <PopUpModal modalVisible={modalVisible} setModalVisible={setModalVisible}>
       <StockUpdateWindow
-        product={product}
+        product={branchStock}
         onUpdate={onStockUpdate}
         onCancel={onCancel}
       />
@@ -101,15 +90,15 @@ function productDetailScreen({ route }) {
   return (
     <View style={styles.container}>
       <ScrollView>
-        {product?.image && (
+        {product?.product_image && (
           <ImageItem
-            imageUri={product.image[0]}
+            imageUri={product.product_image[0]}
             imageStyle={styles.leftImage}
             viewStyle={{ aspectRatio: 2, width: "100%", marginBottom: 10 }}
           />
         )}
         <View style={{ flexDirection: "row", marginBottom: 10 }}>
-          {product.image.slice(1).map((imgUri, index) => (
+          {product?.product_image.slice(1).map((imgUri, index) => (
             <ImageItem
               key={index}
               imageUri={imgUri}
@@ -119,17 +108,22 @@ function productDetailScreen({ route }) {
           ))}
         </View>
         <Text style={{ fontSize: 25, fontWeight: "bold", marginBottom: 10 }}>
-          {product.name}
+          {product.product_name}
         </Text>
-        <Text style={{ fontSize: 20, marginBottom: 10 }}>
-          {product.category}
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "600",
+            fontStyle: "italic",
+            marginBottom: 10,
+          }}
+        >
+          {product.category_name}
         </Text>
-        {renderDetail("Retail price", product.retailPrice)}
-        {renderDetail("Buying price", product.buyingPrice)}
-        {renderDetail("Weight", product.weight)}
-        {renderDetail("Unit", product.unit)}
+        {renderDetail("Retail price", product.retail_price)}
+        {renderDetail("Buying price", product.buying_price)}
         {renderDetail("Discount", product.discount)}
-        {renderDetail("Barcode", product.barcode)}
+        {renderDetail("Barcode", product.product_barcode)}
         {renderDetail("Supplier", product.supplier_id)}
         <AppButton title="Edit" onPress={() => console.log("Edit")} />
         <AppButton title="UpdateStock" onPress={() => setModalVisible(true)} />

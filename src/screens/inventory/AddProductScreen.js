@@ -17,12 +17,11 @@ import {
 } from "../../components/forms";
 import Screen from "../../components/Screen";
 
-import { saveProduct } from "../../services/fakeProductService";
+import { saveProduct } from "../../services/productService";
 import customStyles from "../../config/customStyles";
 import { Icon, Button } from "@rneui/themed";
 import PopUpModal from "../../components/PopUpModal";
 import BarCodeReader from "../../components/sale/BarCodeReader";
-// import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
 
 const categories = [
   { label: "Furniture", value: 1 },
@@ -37,29 +36,37 @@ const suppliers = [
 ];
 
 const initialValues = {
-  title: "",
-  retailPrice: "",
-  buyingPrice: "",
-  category: null,
+  product_name: "",
+  product_desc: "",
+  category_id: "",
+  buying_price: "",
+  retail_price: "",
+  discount: "",
+  product_barcode: "",
+  supplier_id: "",
   images: [],
-  weight: "",
-  units: "",
-  barcode: "",
-  supplier: null,
-  description: "",
 };
 
 const validationSchema = Yup.object().shape({
-  title: Yup.string().required().label("name"),
-  buyingPrice: Yup.number().required().min(1).max(10000).label("Buying Price"),
-  retailPrice: Yup.number().required().min(1).max(10000).label("Retail Price"),
-  category: Yup.object().required().nullable().label("Category"),
+  product_name: Yup.string().required().label("Name"),
+  product_desc: Yup.string().label("Description"),
+  category_id: Yup.object().required().nullable().label("Category"),
+  buying_price: Yup.string().label("Buying Price"),
+  retail_price: Yup.string().label("Retail Price"),
+  discount: Yup.string().label("Discount"),
+  product_barcode: Yup.string().label("Barcode"),
+  supplier_id: Yup.object().required().nullable().label("Supplier"),
   images: Yup.array().min(1, "Please select at least one image."),
-  weight: Yup.number().required().min(1).max(10000).label("Weight"),
-  units: Yup.number().required().min(1).max(10000).label("Units"),
-  barcode: Yup.string().min(1).max(10000).label("Barcode"),
-  supplier: Yup.object().required().nullable().label("Supplier"),
-  description: Yup.string().label("Description"),
+  // title: Yup.string().required().label("name"),
+  // buyingPrice: Yup.number().required().min(1).max(10000).label("Buying Price"),
+  // retailPrice: Yup.number().required().min(1).max(10000).label("Retail Price"),
+  // category: Yup.object().required().nullable().label("Category"),
+  // images: Yup.array().min(1, "Please select at least one image."),
+  // weight: Yup.number().required().min(1).max(10000).label("Weight"),
+  // units: Yup.number().required().min(1).max(10000).label("Units"),
+  // barcode: Yup.string().min(1).max(10000).label("Barcode"),
+  // supplier: Yup.object().required().nullable().label("Supplier"),
+  // description: Yup.string().label("Description"),
 });
 
 function AddProduct(props) {
@@ -70,34 +77,30 @@ function AddProduct(props) {
 
   useEffect(() => {
     if (scanned) {
-      setValues({ ...values, barcode: barcode });
+      setValues({ ...values, product_barcode: barcode });
       setBarcodeModalVisible(false);
     }
   }, [scanned]);
 
   mapToModel = (values) => {
     const product = {
-      name: values.title,
-      retailPrice: values.retailPrice,
-      buyingPrice: values.buyingPrice,
-      category: values.category.label,
-      image: values.images,
-      weight: values.weight,
-      unit: values.units,
-      barcode: values.barcode,
-      supplier_id: values.supplier.value,
-      description: values.description,
+      ...values,
+      category_id: values.category_id.value,
+      supplier_id: values.supplier_id.value,
     };
     return product;
   };
 
-  const onSubmit = (values) => {
-    if (scanned) values.barcode = barcode;
+  const onSubmit = async (values) => {
+    if (scanned) values.product_barcode = barcode;
     console.log("values", values);
     const product = mapToModel(values);
-    console.log("product", product);
-    saveProduct(product);
-    console.log("got", product);
+    try {
+      const { data } = await saveProduct(product);
+      console.log(data);
+    } catch (ex) {
+      console.log(JSON.stringify(ex.response.data.error));
+    }
   };
 
   const popUpBarcodeSanner = () => (
@@ -130,12 +133,20 @@ function AddProduct(props) {
         >
           <FormInputField
             label="Name"
-            name="title"
+            name="product_name"
             placeholder="Name"
             width="100%"
             autoCapitalize="none"
             autoCorrect={false}
             textContentType="name"
+          />
+          <FormInputField
+            label="Description"
+            maxLength={255}
+            multiline
+            name="product_desc"
+            numberOfLines={3}
+            placeholder="short description (max length 255)"
           />
           <Text style={customStyles.label}>Prices</Text>
           <View
@@ -144,40 +155,34 @@ function AddProduct(props) {
             <FormInputField
               keyboardType="numeric"
               maxLength={8}
-              name="retailPrice"
+              name="retail_price"
               placeholder="Retails Price"
               width={160}
             />
             <FormInputField
               keyboardType="numeric"
               maxLength={8}
-              name="buyingPrice"
+              name="buying_price"
               placeholder="Buying Price"
               width={160}
             />
           </View>
+          <FormInputField
+            label="Discount"
+            keyboardType="numeric"
+            maxLength={8}
+            name="discount"
+            placeholder="Discount"
+            width={160}
+          />
           <FormPicker
             label="choose Catagory"
             items={categories}
-            name="category"
+            name="category_id"
             placeholder="Category"
             width="50%"
           />
           <FormImagePicker name="images" label="Product Images" />
-          <FormInputField
-            keyboardType="numeric"
-            maxLength={255}
-            name="weight"
-            label="Weight"
-            placeholder="add weight in grams"
-          />
-          <FormInputField
-            keyboardType="numeric"
-            maxLength={255}
-            name="units"
-            label="Units"
-            placeholder="number of products per item"
-          />
           <View
             style={{
               flexDirection: "row",
@@ -187,10 +192,10 @@ function AddProduct(props) {
             <View style={{ width: "80%" }}>
               <FormInputField
                 maxLength={255}
-                name="barcode"
-                value={values.barcode}
+                name="product_barcode"
+                value={values.product_barcode}
                 label="Barcode"
-                placeholder="type or scan barcode"
+                placeholder="scan barcode"
               />
             </View>
             <TouchableOpacity
@@ -211,17 +216,9 @@ function AddProduct(props) {
           <FormPicker
             label="choose supplier"
             items={suppliers}
-            name="supplier"
+            name="supplier_id"
             placeholder="choose supplier"
             width="75%"
-          />
-          <FormInputField
-            label="Description"
-            maxLength={255}
-            multiline
-            name="description"
-            numberOfLines={3}
-            placeholder="short description (max length 255)"
           />
           <SubmitButton title="Save" width="100%" />
         </Form>
