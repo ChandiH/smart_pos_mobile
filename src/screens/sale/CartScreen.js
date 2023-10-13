@@ -20,6 +20,8 @@ function CartScreen({ navigation }) {
 
   const [selectedProduct, setSelectedProduct] = useState({});
 
+  console.log(selectedProduct);
+  console.log(cart);
   const getTotalQuantity = () => {
     let totalQuantity = 0;
     cart.forEach((item) => {
@@ -33,7 +35,7 @@ function CartScreen({ navigation }) {
     if (cart.length !== 0) {
       cart.forEach((product) => {
         totalPrice += parseFloat(
-          (product.quantity * product.retailPrice.slice(4)).toFixed(2)
+          (product.quantity * product.retail_price).toFixed(2)
         );
       });
     }
@@ -43,7 +45,7 @@ function CartScreen({ navigation }) {
   const getDiscount = () => {
     let discount = 0;
     cart.forEach((product) => {
-      discount += parseFloat(product.quantity * product.discount.toFixed(2));
+      discount += parseFloat(product.quantity * product.discount);
     });
     return parseFloat(discount).toFixed(2);
   };
@@ -107,16 +109,16 @@ function CartScreen({ navigation }) {
         <ListItem bottomDivider>
           <Avatar
             source={{
-              uri: item.image[0],
+              uri: item.product_image[0],
             }}
           />
           <ListItem.Content>
             <ListItem.Title>
-              <Text>{item.name}</Text>
+              <Text>{item.product_name}</Text>
             </ListItem.Title>
             <ListItem.Subtitle>
               <Text>
-                {item.retailPrice}
+                {item.retail_price}
                 {" * "}
                 {item.quantity}
               </Text>
@@ -124,9 +126,7 @@ function CartScreen({ navigation }) {
             <ListItem.Subtitle>
               <Text>
                 {"Rs. "}
-                {parseFloat(item.quantity * item.retailPrice.slice(4)).toFixed(
-                  2
-                )}
+                {parseFloat(item.quantity * item.retail_price).toFixed(2)}
               </Text>
             </ListItem.Subtitle>
           </ListItem.Content>
@@ -147,7 +147,7 @@ function CartScreen({ navigation }) {
         style={{ marginBottom: 250 }}
         data={cart}
         renderItem={renderListItem}
-        keyExtractor={(item) => item.barcode}
+        keyExtractor={(item) => item.product_barcode}
       />
 
       {/* Button */}

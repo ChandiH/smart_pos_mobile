@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { ListItem, Avatar } from "@rneui/themed";
 import { SearchBarAndroid } from "@rneui/base/dist/SearchBar/SearchBar-android";
-import { getProducts } from "../../services/fakeProductService";
+import { getProducts } from "../../services/productService";
 import colors from "../../config/colors";
 import routes from "../../navigation/routes";
 
@@ -18,13 +18,12 @@ function ProductListScreen({ navigation }) {
   const [products, setProducts] = useState([]);
 
   async function fetchProducts() {
-    const products = await getProducts();
+    const { data: products } = await getProducts();
     setProducts(products);
     setFilteredData(products);
   }
 
   useEffect(() => {
-    // fetch customers
     fetchProducts();
   }, []);
 
@@ -38,8 +37,8 @@ function ProductListScreen({ navigation }) {
     if (query !== "") {
       filteredProducts = products.filter(
         (item) =>
-          item.name.toLowerCase().startsWith(query.toLowerCase()) ||
-          item.barcode.toLowerCase().startsWith(query.toLowerCase())
+          item.product_name.toLowerCase().startsWith(query.toLowerCase()) ||
+          item.product_barcode.toLowerCase().startsWith(query.toLowerCase())
       );
     }
     setFilteredData(filteredProducts);
@@ -70,18 +69,18 @@ function ProductListScreen({ navigation }) {
               <ListItem bottomDivider>
                 <Avatar
                   source={{
-                    uri: item.image[0],
+                    uri: item.product_image[0],
                   }}
                 />
                 <ListItem.Content>
                   <ListItem.Title>
-                    <Text>{item.name}</Text>
+                    <Text>{item.product_name}</Text>
                   </ListItem.Title>
                   <ListItem.Subtitle>
-                    <Text>{item.category}</Text>
+                    <Text>{item.category_name}</Text>
                   </ListItem.Subtitle>
                   <ListItem.Subtitle>
-                    <Text>{item.retailPrice}</Text>
+                    <Text>{item.retail_price}</Text>
                   </ListItem.Subtitle>
                 </ListItem.Content>
               </ListItem>

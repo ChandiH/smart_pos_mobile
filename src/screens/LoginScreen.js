@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Yup from "yup";
 import { Form, FormField, SubmitButton } from "../components/forms";
 import Screen from "../components/Screen";
@@ -7,7 +8,8 @@ import Screen from "../components/Screen";
 import UserContext from "../context/UserContext";
 import colors from "../config/colors";
 
-import { authenticate } from "../services/fakeAuthenticationService";
+import { authenticate, decodeJWT } from "../services/authenticationService";
+import axios from "axios";
 
 const validationSchema = Yup.object().shape({
   userName: Yup.string().required().label("name"),
@@ -17,14 +19,40 @@ const validationSchema = Yup.object().shape({
 function LoginScreen({ navigation }) {
   const { user, setUser } = React.useContext(UserContext);
 
-  const onSubmit = (values) => {
-    const user = authenticate(values);
-    if (!user) {
+  fetchData = async () => {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) return;
+    setUser(decodeJWT(token));
+  };
+
+  useEffect(() => {
+    fetchData();
+  });
+
+  const onSubmit = async (values) => {
+    try {
+      const { data: response } = await authenticate({
+        username: values.userName,
+        password: values.password,
+      });
+      console.log(response);
+      await AsyncStorage.setItem("token", response.token);
+      setUser(decodeJWT(response.token));
+      console.log(user);
+      navigation.replace("Home");
+    } catch (e) {
+      console.log("Error Occured", JSON.stringify(e.response?.data?.error));
       return alert("Invalid UserName or Password");
+      // this.setState({ errors: { ...e.response.data.error } });
     }
-    setUser(user);
-    navigation.replace("Home");
-    console.log(user);
+
+    // const user = authenticate(values);
+    // if (!user) {
+    //   return alert("Invalid UserName or Password");
+    // }
+    // setUser(user);
+    // navigation.replace("Home");
+    // console.log(user);
   };
   return (
     <Screen style={styles.container}>
@@ -60,8 +88,8 @@ function LoginScreen({ navigation }) {
       <Text style={styles.forgerPswrd}>Forgot Password?</Text>
       <View style={styles.noteContainer}>
         <Text style={styles.note}>
-          Use the Employee ID that can be created by the Owner or Manager in
-          Manage Store -{">"} Employee Code
+          Use the Employee Account that can be created by the Owner or Manager
+          in Employee Management -{">"} Add New Employee
         </Text>
       </View>
     </Screen>

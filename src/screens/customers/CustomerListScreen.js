@@ -8,9 +8,9 @@ import {
 } from "react-native";
 import { ListItem } from "@rneui/themed";
 import { SearchBarAndroid } from "@rneui/base/dist/SearchBar/SearchBar-android";
-
-import { getCustomers } from "../../services/fakeCustomerService";
 import colors from "../../config/colors";
+
+import { getCustomers } from "../../services/customerService";
 
 function CustomerListScreen(props) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -18,13 +18,12 @@ function CustomerListScreen(props) {
   const [customers, setCustomers] = useState([]);
 
   async function fetchCustomers() {
-    const customers = await getCustomers();
+    const { data: customers } = await getCustomers();
     setCustomers(customers);
     setFilteredData(customers);
   }
 
   useEffect(() => {
-    // fetch customers
     fetchCustomers();
   }, []);
 
@@ -38,8 +37,8 @@ function CustomerListScreen(props) {
     if (query !== "") {
       filteredCustomers = customers.filter(
         (item) =>
-          item.name.toLowerCase().startsWith(query.toLowerCase()) ||
-          item.contact.toLowerCase().startsWith(query.toLowerCase())
+          item.customer_name.toLowerCase().startsWith(query.toLowerCase()) ||
+          item.customer_phone.toLowerCase().startsWith(query.toLowerCase())
       );
     }
     setFilteredData(filteredCustomers);
@@ -66,10 +65,10 @@ function CustomerListScreen(props) {
               <ListItem bottomDivider>
                 <ListItem.Content>
                   <ListItem.Title>
-                    <Text>{item.name}</Text>
+                    <Text>{item.customer_name}</Text>
                   </ListItem.Title>
                   <ListItem.Subtitle>
-                    <Text>{item.contact}</Text>
+                    <Text>{item.customer_email}</Text>
                   </ListItem.Subtitle>
                 </ListItem.Content>
               </ListItem>
@@ -77,7 +76,7 @@ function CustomerListScreen(props) {
             <View style={{ width: "100%", height: 3 }} />
           </>
         )}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.customer_id}
       />
     </View>
   );

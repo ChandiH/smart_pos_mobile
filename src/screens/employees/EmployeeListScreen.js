@@ -9,8 +9,8 @@ import {
 import { ListItem } from "@rneui/themed";
 import { SearchBarAndroid } from "@rneui/base/dist/SearchBar/SearchBar-android";
 
-import { getEmployees } from "../../services/fakeEmployeeService";
-import { getBranches } from "../../services/fakeBranchService";
+import { getEmployees } from "../../services/employeeService";
+import { getBranches } from "../../services/fakeServices/fakeBranchService";
 import colors from "../../config/colors";
 import routes from "../../navigation/routes";
 
@@ -20,16 +20,10 @@ function EmployeesListScreen({ navigation }) {
   const [employees, setEmployees] = useState([]);
 
   async function fetchEmployees() {
-    const employees = await getEmployees();
-    const branch = await getBranches();
-    const detailedEmployees = await employees.map((employee) => {
-      const branch_name = branch.find(
-        (b) => b.branch_id == employee.branch_id
-      )?.name;
-      return { ...employee, branch_name };
-    });
-    setEmployees(detailedEmployees);
-    setFilteredData(detailedEmployees);
+    const { data: employees } = await getEmployees();
+    setEmployees(employees);
+    setFilteredData(employees);
+    console.log(employees[0]);
   }
 
   useEffect(() => {
@@ -46,7 +40,7 @@ function EmployeesListScreen({ navigation }) {
     let filteredEmployees = [...employees];
     if (query !== "") {
       filteredEmployees = employees.filter((item) =>
-        item.name.toLowerCase().startsWith(query.toLowerCase())
+        item.employee_name.toLowerCase().startsWith(query.toLowerCase())
       );
     }
     setFilteredData(filteredEmployees);
@@ -85,7 +79,7 @@ function EmployeesListScreen({ navigation }) {
                     }}
                   >
                     <ListItem.Title>
-                      <Text>{employee.name}</Text>
+                      <Text>{employee.employee_name}</Text>
                     </ListItem.Title>
                     <ListItem.Subtitle>
                       <Text>{employee.branch_name}</Text>
@@ -93,7 +87,7 @@ function EmployeesListScreen({ navigation }) {
                   </View>
                   <ListItem.Subtitle>
                     <Text style={{ fontWeight: "bold" }}>
-                      {employee.userRole_name}
+                      {employee.role_name}
                     </Text>
                   </ListItem.Subtitle>
                 </ListItem.Content>
@@ -102,7 +96,7 @@ function EmployeesListScreen({ navigation }) {
             <View style={{ width: "100%", height: 3 }} />
           </>
         )}
-        keyExtractor={(employee) => employee.id.toString()}
+        keyExtractor={(employee) => employee.employee_id}
       />
     </View>
   );
