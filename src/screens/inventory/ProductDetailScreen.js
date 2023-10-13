@@ -6,6 +6,7 @@ import PopUpModal from "../../components/PopUpModal";
 import StockUpdateWindow from "../../components/inventory/StockUpdataWindow";
 import UserContext from "../../context/UserContext";
 
+import { getImageUrl } from "./../../services/imageHandler";
 import {
   getInventoryByProduct,
   updateInventory,
@@ -92,7 +93,7 @@ function productDetailScreen({ route }) {
       <ScrollView>
         {product?.product_image && (
           <ImageItem
-            imageUri={product.product_image[0]}
+            imageUri={getImageUrl(product.product_image[0])}
             imageStyle={styles.leftImage}
             viewStyle={{ aspectRatio: 2, width: "100%", marginBottom: 10 }}
           />
@@ -101,9 +102,9 @@ function productDetailScreen({ route }) {
           {product?.product_image.slice(1).map((imgUri, index) => (
             <ImageItem
               key={index}
-              imageUri={imgUri}
+              imageUri={getImageUrl(imgUri)}
               imageStyle={styles.leftImage}
-              viewStyle={{ width: "30%", aspectRatio: 1 }}
+              viewStyle={{ width: "30%", aspectRatio: 1, marginLeft: 5 }}
             />
           ))}
         </View>

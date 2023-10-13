@@ -11,6 +11,7 @@ import { SearchBarAndroid } from "@rneui/base/dist/SearchBar/SearchBar-android";
 import { getProducts } from "../../services/productService";
 import colors from "../../config/colors";
 import routes from "../../navigation/routes";
+import { getImageUrl } from "./../../services/imageHandler";
 
 function ProductListScreen({ navigation }) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -69,7 +70,7 @@ function ProductListScreen({ navigation }) {
               <ListItem bottomDivider>
                 <Avatar
                   source={{
-                    uri: item.product_image[0],
+                    uri: getImageUrl(item.product_image[0]),
                   }}
                 />
                 <ListItem.Content>

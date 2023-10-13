@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Avatar } from "@rneui/themed";
+import { getImageUrl } from "../../services/imageHandler";
 
 function EmployeeDetailScreen({ route }) {
   const [employee, setEmployee] = useState(route.params.employee);
@@ -13,6 +14,7 @@ function EmployeeDetailScreen({ route }) {
     });
   }, []);
 
+  console.log(getImageUrl(employee.employee_image));
   const renderDetail = (label, value) => (
     <View
       style={{
@@ -32,7 +34,9 @@ function EmployeeDetailScreen({ route }) {
       <Avatar
         containerStyle={styles.image}
         source={{
-          uri: employee.image,
+          uri: employee.employee_image
+            ? getImageUrl(employee.employee_image)
+            : employee.image,
         }}
         size={"xlarge"}
       />
