@@ -1,0 +1,16 @@
+export default Object.freeze({
+  LOGIN: "Login",
+  PROFILE: "Profile",
+  ADD_CUSTOMER: "AddCustomer",
+  CUSTOMER_LIST: "CustomerList",
+  ADD_PRODUCT: "AddProduct",
+  PRODUCT_LIST: "ProductList",
+  PRODUCT_DETAIL: "ProductDetail",
+  EMPLOYEE_LIST: "EmployeeList",
+  EMPLOYEE_DETAIL: "EmployeeDetail",
+  CASHIER: "Cashier",
+  CART: "Cart",
+  CHECKOUT: "CheckOut",
+  SALE_SUCCESS: "SaleSuccess",
+  SALE_HISTORY: "SaleHistory",
+});

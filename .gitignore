@@ -3,6 +3,9 @@
 # dependencies
 node_modules/
 
+# testing
+coverage/
+
 # Expo
 .expo/
 dist/
@@ -29,6 +32,7 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
 .env*.local
 
 # typescript
