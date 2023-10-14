@@ -34,7 +34,7 @@ const StockUpdateWindow = ({ product, onUpdate, onCancel }) => {
     </View>
   );
   return (
-    <View>
+    <View testID="container">
       <Text style={styles.modalText}>Current Stock</Text>
       {renderDetail("Product Name", product.product_name)}
       {renderDetail("Branch Name", product.branch_name)}

@@ -12,7 +12,7 @@ function FormField({ name, width, icon, ...otherProps }) {
 
   return (
     <>
-      <View style={[styles.container, { width: width }]}>
+      <View style={[styles.container, { width: width }]} testID="modal">
         {icon && (
           <MaterialCommunityIcons style={styles.icon} name={icon} size={25} />
         )}

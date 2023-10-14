@@ -25,7 +25,7 @@ const QuantityWindow = ({ product, onAddCart, onCancel }) => {
   };
 
   return (
-    <View>
+    <View testID="window">
       <Text style={styles.modalText}>{product.product_name}</Text>
       <View style={styles.quantityView}>
         <Text style={{ fontSize: 20 }}>Quantity</Text>

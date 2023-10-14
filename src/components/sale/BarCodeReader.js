@@ -29,7 +29,7 @@ function BarCodeReader({ setBarcode, scanned, setScanned }) {
     return <Text>No access to camera</Text>;
   }
   return (
-    <View style={styles.camera}>
+    <View testID="barcode" style={styles.camera}>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={StyleSheet.absoluteFillObject}

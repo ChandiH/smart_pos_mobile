@@ -9,7 +9,6 @@ import UserContext from "../context/UserContext";
 import colors from "../config/colors";
 
 import { authenticate, decodeJWT } from "../services/authenticationService";
-import axios from "axios";
 
 const validationSchema = Yup.object().shape({
   userName: Yup.string().required().label("name"),

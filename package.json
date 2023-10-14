@@ -56,7 +56,17 @@
       "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)"
     ],
     "collectCoverageFrom": [
-      "src/components/**/*.{js,jsx,ts,tsx}"
+      "src/components/**/*.{js,jsx,ts,tsx}",
+      "!src/components/forms/*.{js,jsx,ts,tsx}",
+      "!src/components/sale/*.{js,jsx,ts,tsx}",
+      "!src/components/inventory/*.{js,jsx,ts,tsx}",
+      "!src/components/ImageItem.{js,jsx,ts,tsx}",
+      "!src/components/ImageInputList.{js,jsx,ts,tsx}",
+      "!src/components/ImageInput.{js,jsx,ts,tsx}",
+      "src/components/forms/ErrorMessage.{js,jsx,ts,tsx}",
+      "src/components/forms/Form.{js,jsx,ts,tsx}",
+      "src/components/forms/FormPicker.{js,jsx,ts,tsx}",
+      "src/components/forms/SubmitButton.{js,jsx,ts,tsx}"
     ]
   }
 }

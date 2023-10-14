@@ -7,6 +7,7 @@ function ImageInputList({ imageUris = [], onRemoveImage, onAddImage }) {
   const scrollView = useRef();
   return (
     <ScrollView
+      testID="scrollView"
       ref={scrollView}
       horizontal
       onContentSizeChange={() => scrollView.current.scrollToEnd()}
