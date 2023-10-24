@@ -10,7 +10,9 @@
       "image": "./src/assets/Splash-Screen.png",
       "backgroundColor": "#59627E"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -18,10 +20,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.chandih.smart_pos_mobile"
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "198e9d46-0fcc-457d-8802-ed682401650d"
+      }
     }
   }
 }

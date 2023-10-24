@@ -5,6 +5,7 @@ import { Avatar } from "@rneui/themed";
 import AppButton from "../components/AppButton";
 
 import UserContext from "../context/UserContext";
+import { getImageUrl } from "./../services/imageHandler";
 
 function ProfileScreen({ navigation }) {
   const { user, setUser } = useContext(UserContext);
@@ -46,7 +47,7 @@ function ProfileScreen({ navigation }) {
       <Avatar
         containerStyle={styles.image}
         source={{
-          uri: user?.employee_image,
+          uri: getImageUrl(user.employee_image),
         }}
         size={"xlarge"}
       />
